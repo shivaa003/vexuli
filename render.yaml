@@ -1,7 +1,0 @@
-services:
-  - type: web
-    name: vexuli
-    runtime: node
-    buildCommand: npm install
-    startCommand: npm start
-    healthCheckPath: /health
