@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#eef0f4">
+  <meta name="description" content="Vexuli sends files and links directly between two browsers. No account, no upload, just a 4-digit code.">
+  <title>Vexuli | Send files directly between devices</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Hanken+Grotesk:wght@400..700&family=JetBrains+Mono:wght@500..600&display=swap">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="app" id="top">
+
+    <header class="header shell">
+      <a class="brand" href="#top" aria-label="Vexuli home">
+        <svg class="mark" viewBox="0 0 26 26" aria-hidden="true">
+          <rect x="1.5" y="1.5" width="9" height="9" rx="2" fill="none" stroke="#161b26" stroke-width="2"/>
+          <rect x="15.5" y="15.5" width="9" height="9" rx="2" fill="#2a3fc9"/>
+          <path d="M10.5 6h5.5a3 3 0 0 1 3 3v6.5" fill="none" stroke="#161b26" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span>vexuli</span>
+      </a>
+      <nav aria-label="Page sections">
+        <a href="#how">How it works</a>
+        <a href="#privacy">Privacy</a>
+        <a href="#limits">Good to know</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <span class="online" id="serverBadge">
+        <i id="serverStatus"></i>
+        <span id="serverStatusText">Connecting…</span>
+      </span>
+    </header>
+
+    <section class="sharing shell" id="sharingArea">
+
+      <div class="intro">
+        <h1>Send files straight to another device.</h1>
+        <p>No account and no upload. Pair two browsers with a 4-digit code, and the transfer goes directly from one to the other.</p>
+      </div>
+
+      <!-- STEP 1: choose role -->
+      <div class="role-section" id="roleSection">
+        <div class="role-grid">
+          <button class="role-card" id="chooseSender" type="button">
+            <span class="role-icon send">↑</span>
+            <span class="role-title">Send</span>
+            <span class="role-text">Get a code and share files or links.</span>
+            <span class="role-cta">Create a room</span>
+          </button>
+          <button class="role-card" id="chooseReceiver" type="button">
+            <span class="role-icon receive">↓</span>
+            <span class="role-title">Receive</span>
+            <span class="role-text">Type the code from the sending device.</span>
+            <span class="role-cta">Enter a code</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 2: workspace -->
+      <div class="workspace" id="workspace">
+
+        <div class="workspace-topbar">
+          <button class="back-btn" id="backBtn" type="button">← Back</button>
+          <div class="status-row">
+            <span class="status-pill" id="statusPill">
+              <i id="roomDot"></i>
+              <span id="roomStatus">Waiting</span>
+            </span>
+            <span class="status-pill subtle" id="codePill">
+              <span id="codePillLabel">Code</span>
+              <b id="codePillValue">————</b>
+            </span>
+          </div>
+        </div>
+
+        <div class="workspace-grid">
+
+          <section class="main-panel">
+
+            <!-- Sender -->
+            <div id="senderBody" class="panel-body">
+              <div class="panel-header">
+                <h2>Send</h2>
+                <span class="count-badge" id="count">0 items</span>
+              </div>
+
+              <div class="drop" id="drop">
+                <span class="drop-icon">⤒</span>
+                <span class="drop-title">Drop files here, or</span>
+                <button class="btn-choose" id="browseBtn" type="button">Choose files</button>
+                <input id="fileInput" type="file" multiple hidden>
+              </div>
+
+              <div class="link-row">
+                <span class="link-icon">🔗</span>
+                <input id="linkInput" placeholder="Paste a link to send" aria-label="Add a link">
+                <button id="addLink" type="button" class="btn-add-link">Add</button>
+              </div>
+
+              <div class="items" id="items"></div>
+
+              <div class="panel-footer">
+                <span class="hint">
+                  <span class="hint-dot" id="sendHintDot"></span>
+                  <span id="sendHint">Waiting…</span>
+                </span>
+                <button class="btn-primary" id="sendBtn" disabled type="button">
+                  Send <span id="sendBtnCount"></span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Receiver -->
+            <div id="receiverBody" class="panel-body" hidden>
+              <div class="panel-header">
+                <h2>Inbox</h2>
+                <span class="count-badge" id="receiveCount">0 received</span>
+              </div>
+
+              <div id="connectedState" class="connected-state" hidden>
+                <span class="check">✓</span>
+                <h3>Connected. Keep this tab open.</h3>
+              </div>
+
+              <div class="inbox">
+                <div class="inbox-head">
+                  <span>Received</span>
+                  <span id="receiveStatus" class="muted">—</span>
+                </div>
+                <div class="received" id="received"></div>
+              </div>
+            </div>
+
+          </section>
+
+          <aside class="side-panel">
+            <div class="side-block">
+              <span class="side-label" id="sideCodeLabel">Room code</span>
+
+              <div id="senderCodeView">
+                <div class="code" id="code" aria-label="Pairing code"></div>
+                <div class="side-actions">
+                  <button class="btn-secondary" id="copyBtn" type="button">Copy code</button>
+                  <button class="btn-icon" id="refreshBtn" type="button" aria-label="Generate a new code">↻</button>
+                </div>
+                <p class="side-note">Enter this code on the receiving device. Generating a new code ends the current room.</p>
+              </div>
+
+              <div id="receiverCodeView" hidden>
+                <div class="join">
+                  <input id="joinCode" inputmode="numeric" maxlength="4"
+                         placeholder="0000" aria-label="4 digit room code" autocomplete="off">
+                </div>
+                <div class="side-actions" style="margin-top:12px">
+                  <button class="btn-primary" id="joinBtn" type="button">Connect</button>
+                </div>
+                <p class="side-note">Ask the sender for the 4-digit code shown on their screen.</p>
+              </div>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="how">
+      <div class="shell">
+        <h2>Three steps, no sign-up</h2>
+        <p class="lead">Both people just need a browser. Nothing to install on either device.</p>
+        <ol class="steps">
+          <li>
+            <h3>Create a room</h3>
+            <p>The sender picks Send and gets a 4-digit code. Add files or paste links while you wait.</p>
+          </li>
+          <li>
+            <h3>Enter the code</h3>
+            <p>The receiver picks Receive and types the code. The two browsers find each other and connect.</p>
+          </li>
+          <li>
+            <h3>Send</h3>
+            <p>Once the status turns green, press Send. Files arrive in the receiver's inbox, ready to download.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section alt" id="privacy">
+      <div class="shell split">
+        <div>
+          <h2>Your files never touch our server</h2>
+          <p class="lead">Vexuli uses WebRTC. The server only introduces the two browsers; the transfer itself is a direct, encrypted connection between them.</p>
+          <ul class="facts">
+            <li><b>Direct transfer</b><span>File data goes from device to device. We don't receive it, store it or keep a copy.</span></li>
+            <li><b>Encrypted in transit</b><span>WebRTC data channels are encrypted by default using DTLS.</span></li>
+            <li><b>Nothing to remember</b><span>Rooms exist only while people are connected. Close the tab and the room is gone.</span></li>
+          </ul>
+        </div>
+        <figure class="diagram" style="margin:0">
+          <svg viewBox="0 0 440 300" role="img" aria-label="Diagram: the server only passes the code and connection details. Files travel directly from sender to receiver.">
+            <rect x="150" y="14" width="140" height="52" rx="8" fill="#f6f7f9" stroke="#b9c0cd" stroke-width="1.5"/>
+            <text x="220" y="36" text-anchor="middle" font-family="Hanken Grotesk,sans-serif" font-size="14" font-weight="700" fill="#161b26">Vexuli server</text>
+            <text x="220" y="54" text-anchor="middle" font-family="Hanken Grotesk,sans-serif" font-size="12" fill="#586072">code + handshake only</text>
+
+            <path d="M92 190 L92 120 Q92 90 122 82 L150 60" fill="none" stroke="#8a93a3" stroke-width="1.5" stroke-dasharray="5 5"/>
+            <path d="M348 190 L348 120 Q348 90 318 82 L290 60" fill="none" stroke="#8a93a3" stroke-width="1.5" stroke-dasharray="5 5"/>
+
+            <rect x="24" y="190" width="136" height="64" rx="8" fill="#161b26"/>
+            <text x="92" y="218" text-anchor="middle" font-family="Hanken Grotesk,sans-serif" font-size="15" font-weight="700" fill="#fff">Sender</text>
+            <text x="92" y="238" text-anchor="middle" font-family="Hanken Grotesk,sans-serif" font-size="12" fill="#b9c0cd">your browser</text>
+
+            <rect x="280" y="190" width="136" height="64" rx="8" fill="#161b26"/>
+            <text x="348" y="218" text-anchor="middle" font-family="Hanken Grotesk,sans-serif" font-size="15" font-weight="700" fill="#fff">Receiver</text>
+            <text x="348" y="238" text-anchor="middle" font-family="Hanken Grotesk,sans-serif" font-size="12" fill="#b9c0cd">their browser</text>
+
+            <line x1="160" y1="222" x2="280" y2="222" stroke="#2a3fc9" stroke-width="3"/>
+            <path d="M272 214 L282 222 L272 230" fill="none" stroke="#2a3fc9" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <text x="220" y="210" text-anchor="middle" font-family="Hanken Grotesk,sans-serif" font-size="12" font-weight="700" fill="#2a3fc9">files, direct</text>
+            <text x="220" y="284" text-anchor="middle" font-family="Hanken Grotesk,sans-serif" font-size="12" fill="#586072">dashed = connection setup, solid = your data</text>
+          </svg>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" id="limits">
+      <div class="shell">
+        <h2>Good to know before you send</h2>
+        <p class="lead">Direct transfer is simple and private, with a few trade-offs worth understanding.</p>
+        <div class="limits">
+          <div>
+            <h3>Both tabs stay open</h3>
+            <p>The transfer only works while both devices are online with Vexuli open. If either side closes the tab or loses connection, the transfer stops.</p>
+          </div>
+          <div>
+            <h3>Large files use memory</h3>
+            <p>The receiving browser holds the file in memory until you download it. Very large files may be slow or fail on phones and older computers.</p>
+          </div>
+          <div>
+            <h3>Some networks block it</h3>
+            <p>Strict firewalls and some corporate or school networks can stop direct connections. If pairing fails, try another network or a mobile hotspot.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt" id="faq">
+      <div class="shell">
+        <h2>Questions</h2>
+        <p class="lead">Short answers to what people ask most.</p>
+        <div class="faq">
+          <details>
+            <summary>Is there a file size limit?</summary>
+            <p>Vexuli sets no limit itself, but the receiving browser has to hold the whole file in memory. Keep very large files to computers with plenty of RAM, or split them into archives.</p>
+          </details>
+          <details>
+            <summary>Can someone guess my code?</summary>
+            <p>A 4-digit code is easy to type but short, so treat it like a one-time pairing code. Only share it with the person you're sending to, and generate a new one with the refresh button once you're done.</p>
+          </details>
+          <details>
+            <summary>Do I need an account?</summary>
+            <p>No. There is nothing to sign up for and nothing to install. Open Vexuli on both devices and pair them with a code.</p>
+          </details>
+          <details>
+            <summary>What can I send?</summary>
+            <p>Any file type, several at once, plus web links. Links open in a new tab on the receiving device.</p>
+          </details>
+          <details>
+            <summary>Why does the connection fail sometimes?</summary>
+            <p>Direct connections depend on your network. Restrictive firewalls, VPNs and some mobile carriers can block them. Switching networks or turning off the VPN usually fixes it.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <div class="shell">
+      <footer class="site-footer">
+        <a class="brand" href="#top" style="font-size:17px">
+          <svg class="mark" viewBox="0 0 26 26" aria-hidden="true" style="width:22px;height:22px">
+            <rect x="1.5" y="1.5" width="9" height="9" rx="2" fill="none" stroke="#161b26" stroke-width="2"/>
+            <rect x="15.5" y="15.5" width="9" height="9" rx="2" fill="#2a3fc9"/>
+            <path d="M10.5 6h5.5a3 3 0 0 1 3 3v6.5" fill="none" stroke="#161b26" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span>vexuli</span>
+        </a>
+        <p>Private device-to-device sharing. Files are never stored on our server.</p>
+      </footer>
+    </div>
+
+    <div id="toast" class="toast" hidden></div>
+  </main>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

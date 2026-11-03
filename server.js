@@ -1,135 +1,155 @@
-import http from "node:http"
-import { randomBytes, randomInt } from "node:crypto"
-import { createReadStream, existsSync, statSync } from "node:fs"
-import { extname, join, normalize } from "node:path"
-import { fileURLToPath } from "node:url"
-import { WebSocketServer } from "ws"
+const http = require("http");
+const fs = require("fs");
+const path = require("path");
+const { Server } = require("socket.io");
 
-const root = fileURLToPath(new URL(".", import.meta.url))
-const port = Number(process.env.PORT || 3000)
-const rooms = new Map()
+const PUBLIC_DIR = path.join(__dirname, "public");
+const PORT = process.env.PORT || 3000;
 
-const mimeTypes = {
+const MIME = {
   ".html": "text/html; charset=utf-8",
+  ".js": "application/javascript; charset=utf-8",
   ".css": "text/css; charset=utf-8",
-  ".js": "text/javascript; charset=utf-8",
-  ".json": "application/json; charset=utf-8",
   ".svg": "image/svg+xml",
+  ".png": "image/png",
   ".ico": "image/x-icon",
+  ".json": "application/json; charset=utf-8",
+};
+
+const server = http.createServer((req, res) => {
+  let urlPath = decodeURIComponent(req.url.split("?")[0]);
+  if (urlPath === "/") urlPath = "/index.html";
+
+  // Prevent path traversal
+  const safePath = path
+    .normalize(urlPath)
+    .replace(/^(\.\.[/\\])+/, "")
+    .replace(/^[/\\]+/, "");
+
+  const filePath = path.join(PUBLIC_DIR, safePath);
+
+  if (!filePath.startsWith(PUBLIC_DIR)) {
+    res.writeHead(403);
+    return res.end("Forbidden");
+  }
+
+  fs.readFile(filePath, (err, data) => {
+    if (err) {
+      res.writeHead(404, { "Content-Type": "text/plain" });
+      return res.end("Not found");
+    }
+    const ext = path.extname(filePath).toLowerCase();
+    res.writeHead(200, { "Content-Type": MIME[ext] || "application/octet-stream" });
+    res.end(data);
+  });
+});
+
+const io = new Server(server, {
+  cors: { origin: "*", methods: ["GET", "POST"] },
+  maxHttpBufferSize: 1e7,
+});
+
+/** @type {Map<string, Set<string>>} code -> Set<socketId> */
+const rooms = new Map();
+
+const CODE_TTL_MS = 1000 * 60 * 30; // 30 minutes
+/** @type {Map<string, NodeJS.Timeout>} */
+const timers = new Map();
+
+function clearRoom(code) {
+  const t = timers.get(code);
+  if (t) clearTimeout(t);
+  timers.delete(code);
+  rooms.delete(code);
 }
 
-function createRoom() {
-  let code
-  do code = String(randomInt(1000, 10000))
-  while (rooms.has(code))
-  const room = { code, token: randomBytes(24).toString("hex"), host: null, guest: null, createdAt: Date.now() }
-  rooms.set(code, room)
-  return room
+function createCode() {
+  let code;
+  let attempts = 0;
+  do {
+    code = String(1000 + Math.floor(Math.random() * 9000));
+    attempts++;
+    if (attempts > 1000) throw new Error("Unable to allocate room code");
+  } while (rooms.has(code));
+  return code;
 }
 
-function send(socket, payload) {
-  if (socket?.readyState === 1) socket.send(JSON.stringify(payload))
-}
+io.on("connection", (socket) => {
+  socket.data.roomCode = null;
 
-function closeRoom(room) {
-  if (!room) return
-  room.host = null
-  if (room.guest) send(room.guest, { type: "room-closed", message: "The sender ended this room." })
-  room.guest?.close()
-  rooms.delete(room.code)
-}
+  socket.on("create-room", () => {
+    try {
+      const code = createCode();
+      rooms.set(code, new Set([socket.id]));
+      socket.data.roomCode = code;
+      socket.join(code);
 
-const server = http.createServer((request, response) => {
-  const url = new URL(request.url || "/", `http://${request.headers.host}`)
-  if (url.pathname === "/health") {
-    response.writeHead(200, { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" })
-    response.end(JSON.stringify({ ok: true, service: "vexuli", rooms: rooms.size }))
-    return
-  }
-  if (url.pathname === "/api/rooms" && request.method === "POST") {
-    const room = createRoom()
-    response.writeHead(201, { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" })
-    response.end(JSON.stringify({ code: room.code, token: room.token }))
-    return
-  }
-  if (request.method !== "GET" && request.method !== "HEAD") {
-    response.writeHead(405)
-    response.end("Method not allowed")
-    return
-  }
-  const requested = url.pathname === "/" ? "/index.html" : url.pathname
-  const filePath = normalize(join(root, requested))
-  if (!filePath.startsWith(root) || !existsSync(filePath) || !statSync(filePath).isFile()) {
-    response.writeHead(404)
-    response.end("Not found")
-    return
-  }
-  response.writeHead(200, {
-    "content-type": mimeTypes[extname(filePath)] || "application/octet-stream",
-    "cache-control": "no-store",
-    "x-content-type-options": "nosniff",
-    "referrer-policy": "no-referrer",
-  })
-  if (request.method === "HEAD") response.end()
-  else createReadStream(filePath).pipe(response)
-})
+      const t = setTimeout(() => {
+        const peers = rooms.get(code);
+        if (peers) {
+          for (const id of peers) {
+            io.to(id).emit("error-msg", { message: "Room expired" });
+            const s = io.sockets.sockets.get(id);
+            if (s) {
+              s.leave(code);
+              s.data.roomCode = null;
+            }
+          }
+          clearRoom(code);
+        }
+      }, CODE_TTL_MS);
+      timers.set(code, t);
 
-const websocketServer = new WebSocketServer({ noServer: true })
-server.on("upgrade", (request, socket, head) => {
-  if (new URL(request.url || "/", `http://${request.headers.host}`).pathname !== "/signal") {
-    socket.destroy()
-    return
-  }
-  websocketServer.handleUpgrade(request, socket, head, (client) => websocketServer.emit("connection", client))
-})
+      socket.emit("room-created", { code });
+    } catch (err) {
+      socket.emit("error-msg", { message: "Could not create room" });
+    }
+  });
 
-websocketServer.on("connection", (socket) => {
-  let role = null
-  let room = null
-
-  socket.on("message", (raw) => {
-    let message
-    try { message = JSON.parse(raw.toString()) } catch { return send(socket, { type: "error", message: "Invalid signaling message." }) }
-
-    if (message.type === "host") {
-      const candidate = rooms.get(String(message.code))
-      if (!candidate || candidate.token !== message.token) return send(socket, { type: "error", message: "This room has expired. Create a new room." })
-      if (candidate.host) return send(socket, { type: "error", message: "This room is already active." })
-      role = "host"; room = candidate; room.host = socket
-      send(socket, { type: "host-ready", code: room.code })
-      return
+  socket.on("join-room", ({ code } = {}) => {
+    if (!code || !/^\d{4}$/.test(String(code))) {
+      return socket.emit("error-msg", { message: "Invalid room code" });
+    }
+    const peers = rooms.get(code);
+    if (!peers) {
+      return socket.emit("error-msg", { message: "That room code is not valid" });
+    }
+    if (peers.has(socket.id)) {
+      return socket.emit("error-msg", { message: "You are already in this room" });
+    }
+    if (peers.size >= 2) {
+      return socket.emit("error-msg", { message: "That room is full" });
     }
 
-    if (message.type === "join") {
-      const candidate = rooms.get(String(message.code))
-      if (!candidate) return send(socket, { type: "error", message: "Invalid or expired room code." })
-      if (!candidate.host) return send(socket, { type: "error", message: "The sender is not ready yet." })
-      if (candidate.guest) return send(socket, { type: "error", message: "This room already has two devices." })
-      role = "guest"; room = candidate; room.guest = socket
-      send(socket, { type: "joined" }); send(room.host, { type: "peer-joined" })
-      return
+    peers.add(socket.id);
+    socket.data.roomCode = code;
+    socket.join(code);
+
+    socket.emit("room-joined", { code });
+    for (const id of peers) {
+      if (id !== socket.id) {
+        io.to(id).emit("peer-joined", { id: socket.id });
+        socket.emit("peer-joined", { id });
+      }
     }
+  });
 
-    if (message.type === "signal" && room) {
-      const peer = role === "host" ? room.guest : room.host
-      if (peer) send(peer, { type: "signal", data: message.data })
-      return
-    }
+  socket.on("signal", ({ to, data } = {}) => {
+    if (!to || !data) return;
+    io.to(to).emit("signal", { from: socket.id, data });
+  });
 
-    if (message.type === "leave") socket.close()
-  })
+  socket.on("disconnect", () => {
+    const code = socket.data.roomCode;
+    if (!code) return;
+    const peers = rooms.get(code);
+    if (!peers) return;
+    peers.delete(socket.id);
+    socket.to(code).emit("peer-left", { id: socket.id });
+    if (peers.size === 0) clearRoom(code);
+  });
+});
 
-  socket.on("close", () => {
-    if (!room) return
-    const peer = role === "host" ? room.guest : room.host
-    if (peer) send(peer, { type: "peer-left" })
-    if (role === "host") closeRoom(room)
-    else if (room.guest === socket) room.guest = null
-  })
-})
-
-setInterval(() => {
-  for (const room of rooms.values()) if (Date.now() - room.createdAt > 30 * 60 * 1000) closeRoom(room)
-}, 60 * 1000).unref()
-
-server.listen(port, () => console.log(`Vexuli listening on http://localhost:${port}`))
+server.listen(PORT, () => {
+  console.log(`Vexuli running at http://localhost:${PORT}`);
+});
