@@ -15,7 +15,7 @@
       --line-soft: #e4e7ec;
       --text: #0b0f19;
       --muted: #5e6b81;
-      --acc: #1e3a8a;        /* deep indigo – serious, secure */
+      --acc: #1e3a8a;
       --acc-light: #e8edf9;
       --acc-hover: #152c66;
       --danger: #b91c1c;
@@ -54,9 +54,6 @@
       font: 15px/1.5 var(--sans);
       -webkit-font-smoothing: antialiased;
       min-height: 100vh;
-    }
-    /* subtle grid – techie but not loud */
-    body {
       background-image:
         linear-gradient(var(--line-soft) 1px, transparent 1px),
         linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
@@ -79,15 +76,12 @@
       padding: 24px 20px 70px;
       padding-top: max(24px, env(safe-area-inset-top,0px));
     }
-
-    /* ---------- header ---------- */
     .top {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding-bottom: 16px;
       border-bottom: 1px solid var(--line);
-      margin-bottom: 0;
     }
     .brand {
       display: flex;
@@ -111,7 +105,6 @@
       inset: 5px;
       background: var(--acc);
       border-radius: 2px;
-      transition: var(--transition);
     }
     .sync {
       font: 500 .75rem var(--mono);
@@ -132,8 +125,6 @@
       transition: .2s;
     }
     .sync.ok i { background: var(--ok); box-shadow: 0 0 8px var(--ok); }
-
-    /* ---------- hero ---------- */
     .hero { padding: 36px 0 24px; }
     h1 {
       font-size: clamp(1.9rem, 5vw, 2.7rem);
@@ -149,8 +140,6 @@
       margin: 0;
       font-size: 1.02rem;
     }
-
-    /* ---------- panels ---------- */
     .panel {
       background: var(--panel);
       border: 1px solid var(--line);
@@ -178,8 +167,6 @@
     }
     h3 { margin: 0 0 6px; font-size: 1.05rem; font-weight: 600; }
     p.s { margin: 0 0 16px; color: var(--muted); font-size: .88rem; }
-
-    /* code display */
     .code {
       font: 600 2.8rem var(--mono);
       letter-spacing: .3em;
@@ -190,16 +177,9 @@
       background: var(--bg);
       margin-bottom: 12px;
       color: var(--text);
-      transition: var(--transition);
       user-select: all;
     }
-
-    /* digit inputs */
-    .digits {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
+    .digits { display: flex; gap: 8px; margin-bottom: 14px; }
     .digits input {
       width: 100%;
       min-width: 0;
@@ -218,8 +198,6 @@
       box-shadow: 0 0 0 3px var(--acc-light);
       background: var(--panel);
     }
-
-    /* inputs & buttons */
     input[type=text] {
       width: 100%;
       background: var(--bg);
@@ -251,43 +229,29 @@
     }
     .b:hover { background: var(--acc-hover); border-color: var(--acc-hover); }
     .b:active { transform: scale(.97); }
-    .b.q {
-      background: var(--panel);
-      border-color: var(--line);
-      color: var(--text);
-    }
+    .b:disabled { opacity: .5; cursor: not-allowed; }
+    .b.q { background: var(--panel); border-color: var(--line); color: var(--text); }
     .b.q:hover { background: var(--hover); border-color: var(--muted); }
-    .b.d {
-      background: var(--panel);
-      border-color: var(--danger);
-      color: var(--danger);
-    }
+    .b.d { background: var(--panel); border-color: var(--danger); color: var(--danger); }
     .b.d:hover { background: var(--danger); color: #fff; }
     .b.sm { padding: 7px 14px; font-size: .8rem; }
-
     .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
     .st {
       font: .78rem var(--mono);
       color: var(--muted);
       margin-top: 12px;
       min-height: 1.2em;
-      transition: var(--transition);
     }
     .st.err { color: var(--danger); }
-
-    /* ask box */
     .ask {
       margin-top: 16px;
       padding: 16px;
       border: 1px solid var(--acc);
       border-radius: 10px;
       background: var(--acc-light);
-      transition: var(--transition);
     }
     .ask p { margin: 0 0 12px; font-size: .9rem; font-weight: 500; }
     .hidden { display: none !important; }
-
-    /* session view */
     .sess {
       padding: 18px 22px;
       display: flex;
@@ -313,11 +277,8 @@
       margin-bottom: 16px;
       border-color: var(--acc);
       background: var(--acc-light);
-      transition: var(--transition);
     }
     .verify p { margin: 0 0 12px; font-size: .88rem; }
-
-    /* drop zone */
     .drop {
       display: block;
       padding: 36px 24px;
@@ -329,23 +290,12 @@
       text-align: left;
       box-shadow: var(--shadow);
     }
-    .drop:hover, .drop.over {
-      border-color: var(--acc);
-      background: var(--acc-light);
-    }
+    .drop:hover, .drop.over { border-color: var(--acc); background: var(--acc-light); }
     .drop .t { font-weight: 600; font-size: .95rem; }
     .drop .m { color: var(--muted); font-size: .85rem; margin-top: 3px; }
-
-    .send {
-      display: flex;
-      gap: 8px;
-      margin: 14px 0 22px;
-    }
+    .send { display: flex; gap: 8px; margin: 14px 0 22px; }
     .send input { flex: 1; }
-
     .lock { opacity: .4; pointer-events: none; transition: opacity .2s; }
-
-    /* feed */
     .list {
       overflow: hidden;
       background: var(--panel);
@@ -360,7 +310,6 @@
       align-items: center;
       padding: 14px 18px;
       border-bottom: 1px solid var(--line-soft);
-      transition: background var(--transition);
     }
     .item:hover { background: var(--hover); }
     .item:last-child { border-bottom: 0; }
@@ -404,14 +353,7 @@
       border-radius: 3px;
       transition: width .15s linear;
     }
-    .empty {
-      padding: 40px 24px;
-      text-align: center;
-      color: var(--muted);
-      font-size: .9rem;
-    }
-
-    /* facts */
+    .empty { padding: 40px 24px; text-align: center; color: var(--muted); font-size: .9rem; }
     .facts {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -426,17 +368,9 @@
       padding-top: 12px;
       line-height: 1.5;
     }
-    .facts b {
-      display: block;
-      color: var(--text);
-      font-size: .85rem;
-      margin-bottom: 3px;
-      font-weight: 600;
-    }
-
-    /* utility */
-    .fade-in { animation: fade .25s ease; }
+    .facts b { display: block; color: var(--text); font-size: .85rem; margin-bottom: 3px; font-weight: 600; }
     @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { animation: fade .25s ease; }
   </style>
 </head>
 <body>
@@ -446,7 +380,6 @@
     <div class="sync" id="sync"><i></i><span id="syncT">no session</span></div>
   </div>
 
-  <!-- PAIR VIEW -->
   <div id="pairView">
     <div class="hero">
       <h1>Private transfer between exactly two devices.</h1>
@@ -491,7 +424,6 @@
     </div>
   </div>
 
-  <!-- SESSION VIEW -->
   <div id="sessView" class="hidden">
     <div class="panel sess">
       <div>
@@ -525,6 +457,7 @@
   </div>
 </div>
 
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <script>
 (() => {
   "use strict";
@@ -544,106 +477,116 @@
 
   const fmt = n => n < 1024 ? n + ' B' : n < 1048576 ? (n / 1024).toFixed(1) + ' KB' : n < 1073741824 ? (n / 1048576).toFixed(1) + ' MB' : (n / 1073741824).toFixed(2) + ' GB';
 
-  let room = null, role = null, code = null, partner = null, pending = null, pc, dc, dls = null, expiry = null;
-  let selfOk = false, peerOk = false, inc = null, queued = [], remoteSet = false, fpL = '', fpR = '';
+  // ---------- state ----------
+  let peer = null, conn = null;
+  let role = null, code = null;
+  let selfOk = false, peerOk = false;
+  let inc = null;
+  let dls = null;
+  let expiry = null;
+  let connectionTimer = null;
+
+  // PeerJS uses a public signaling server. Room prefix keeps codes unique.
+  const ROOM_PREFIX = 'relay-x7k2-';
 
   const setSync = (t, ok) => { $('#syncT').textContent = t; $('#sync').classList.toggle('ok', !!ok); };
   const say = (id, t, err) => { const e = $(id); e.textContent = t; e.classList.toggle('err', !!err); };
 
-  // ---------- room (Claude use) ----------
-  async function getRoom() {
-    const c = window.claude;
-    if (!c) throw new Error('Claude runtime not available. Please open this page through the Claude environment.');
-    const r = await c.use('room');
-    return r;
-  }
-
-  async function open(name) {
-    const root = await getRoom();
-    if (!root || !root.join) throw new Error('Pairing needs you to be signed in to your Claude account.');
-    room = await root.join('pair-' + name);
-    room.on('hello', onHello);
-    room.on('deny', onDeny);
-    room.on('sig', onSig);
-  }
-
-  async function closeRoom() {
-    try { if (room) await room.leave(); } catch (e) {}
-    room = null;
-  }
-
-  const send = (topic, data) => room && room.emit(topic, { ...data, from: me });
-
-  // ---------- Host ----------
-  $('#mk').onclick = async () => {
+  // ---------- Host: generate a code, wait for guest ----------
+  $('#mk').onclick = () => {
     $('#hostIdle').classList.add('hidden');
     $('#hostLive').classList.remove('hidden');
     role = 'host';
+    selfOk = false;
+    peerOk = false;
     say('#hostSt', 'Generating a unique code…');
-    try {
-      for (let i = 0; i < 6; i++) {
-        code = String(1000 + (crypto.getRandomValues(new Uint32Array(1))[0] % 9000));
-        await open(code);
-        await room.presence({ role: 'host' });
-        await new Promise(r => setTimeout(r, 1200));
-        const seen = await new Promise(res => {
-          let done = false;
-          const fin = v => { if (!done) { done = true; res(v); } };
-          setTimeout(() => fin(false), 1500);
-          const u = room.onPeers(c => {
-            fin((c.peers || []).some(p => !p.isMe && p.presence && p.presence.role === 'host'));
-            try { u && u(); } catch (e) {}
-          });
-        });
-        if (!seen) break;
-        await closeRoom();
-        code = null;
-      }
-      if (!code) throw new Error('Could not reserve a code. Try again.');
-      $('#codeBox').textContent = code;
-      setSync('waiting', false);
+
+    // Generate 4-digit code
+    code = String(1000 + (crypto.getRandomValues(new Uint32Array(1))[0] % 9000));
+    $('#codeBox').textContent = code;
+    setSync('waiting', false);
+
+    // Create PeerJS host with ID derived from code
+    const hostId = ROOM_PREFIX + code;
+    peer = new Peer(hostId, { debug: 0 });
+
+    peer.on('open', () => {
       say('#hostSt', 'Waiting for the other device. Code expires in 5 minutes.');
+      setSync('waiting', false);
       expiry = setTimeout(() => {
-        if (!partner) { say('#hostSt', 'Code expired.', 1); cancelHost(); }
+        if (!conn) {
+          say('#hostSt', 'Code expired.', 1);
+          cancelHost();
+        }
       }, 300000);
-    } catch (e) { say('#hostSt', e.message || 'Could not start.', 1); }
+    });
+
+    peer.on('connection', (c) => {
+      if (conn) {
+        // Already have a connection → refuse third party
+        c.on('open', () => {
+          c.send(JSON.stringify({ t: 'deny', why: 'This code is already in use.' }));
+          setTimeout(() => c.close(), 500);
+        });
+        return;
+      }
+      // Show approval prompt to host
+      c.on('open', () => {
+        c.send(JSON.stringify({ t: 'hello', dev }));
+      });
+      c.on('data', (raw) => {
+        try {
+          const m = JSON.parse(raw);
+          if (m.t === 'hello') {
+            $('#askT').textContent = '“' + String(m.dev || 'A device').slice(0, 40) + '” wants to connect. Only allow it if this is your own device.';
+            $('#ask').classList.remove('hidden');
+            pendingConn = c;
+          }
+        } catch (e) {}
+      });
+    });
+
+    peer.on('error', (err) => {
+      if (err.type === 'unavailable-id') {
+        say('#hostSt', 'That code is taken. Generating a new one…', 1);
+        cancelHost();
+        setTimeout(() => $('#mk').click(), 300);
+      } else {
+        say('#hostSt', 'Connection error: ' + err.type, 1);
+      }
+    });
   };
 
-  function onHello(m) {
-    const d = m.data || {};
-    if (role !== 'host' || !d.from) return;
-    if (partner || pending) {
-      send('deny', { to: d.from, why: 'This code is already in use.' });
-      return;
-    }
-    pending = d.from;
-    $('#askT').textContent = '“' + String(d.dev || 'A device').slice(0, 40) + '” wants to connect. Only allow it if this is your own device.';
-    $('#ask').classList.remove('hidden');
-  }
+  let pendingConn = null;
 
   $('#allow').onclick = () => {
-    if (!pending) return;
-    partner = pending;
-    pending = null;
+    if (!pendingConn) return;
     $('#ask').classList.add('hidden');
     clearTimeout(expiry);
     say('#hostSt', 'Approved. Securing the link…');
-    startPeer(true);
+    conn = pendingConn;
+    pendingConn = null;
+    bindConn(true);
+    // Send approval so guest knows to proceed
+    conn.send(JSON.stringify({ t: 'approved', dev }));
   };
 
   $('#refuse').onclick = () => {
-    if (pending) send('deny', { to: pending, why: 'The other device refused the connection.' });
-    pending = null;
+    if (pendingConn) {
+      try { pendingConn.send(JSON.stringify({ t: 'deny', why: 'The other device refused the connection.' })); } catch (e) {}
+      setTimeout(() => { try { pendingConn.close(); } catch (e) {} }, 300);
+    }
+    pendingConn = null;
     $('#ask').classList.add('hidden');
   };
 
   function cancelHost() {
-    closeRoom();
+    clearTimeout(expiry);
+    if (pendingConn) { try { pendingConn.close(); } catch (e) {} pendingConn = null; }
+    if (conn) { try { conn.close(); } catch (e) {} conn = null; }
+    if (peer) { try { peer.destroy(); } catch (e) {} peer = null; }
     role = null;
     code = null;
-    partner = null;
-    pending = null;
-    clearTimeout(expiry);
     $('#hostLive').classList.add('hidden');
     $('#hostIdle').classList.remove('hidden');
     $('#ask').classList.add('hidden');
@@ -651,7 +594,7 @@
   }
   $('#cancel').onclick = cancelHost;
 
-  // ---------- Joiner ----------
+  // ---------- Guest: enter code, connect to host ----------
   const dg = [...document.querySelectorAll('#digits input')];
   dg.forEach((el, i) => {
     el.oninput = () => {
@@ -668,132 +611,138 @@
     };
   });
 
-  $('#jn').onclick = async () => {
+  $('#jn').onclick = () => {
     const c = dg.map(x => x.value).join('');
     if (c.length !== 4) return say('#joinSt', 'Enter all 4 digits.', 1);
     role = 'guest';
     code = c;
+    selfOk = false;
+    peerOk = false;
     say('#joinSt', 'Looking for the device…');
-    try {
-      await open(c);
-      await room.presence({ role: 'guest' });
-      let tries = 0;
-      const t = setInterval(() => {
-        if (partner || role !== 'guest') { clearInterval(t); return; }
-        if (++tries > 8) {
-          clearInterval(t);
-          say('#joinSt', 'No device found for that code.', 1);
-          closeRoom();
-          role = null;
-          return;
-        }
-        send('hello', { dev });
-      }, 1800);
-      setTimeout(() => send('hello', { dev }), 500);
+    setSync('waiting', false);
+
+    peer = new Peer({ debug: 0 });
+
+    peer.on('open', () => {
+      const hostId = ROOM_PREFIX + c;
+      conn = peer.connect(hostId, { reliable: true });
+      bindConn(false);
       say('#joinSt', 'Waiting for the other device to approve…');
-    } catch (e) { say('#joinSt', e.message || 'Could not connect.', 1); }
+
+      connectionTimer = setTimeout(() => {
+        if (!conn || !conn.open) {
+          say('#joinSt', 'No device found for that code.', 1);
+          cleanup();
+          role = null;
+        }
+      }, 12000);
+    });
+
+    peer.on('error', (err) => {
+      if (err.type === 'peer-unavailable') {
+        say('#joinSt', 'No device found for that code.', 1);
+      } else {
+        say('#joinSt', 'Connection error: ' + err.type, 1);
+      }
+      cleanup();
+      role = null;
+    });
   };
 
-  function onDeny(m) {
-    const d = m.data || {};
-    if (d.to !== me) return;
-    say('#joinSt', d.why || 'Refused.', 1);
-    closeRoom();
-    role = null;
+  function cleanup() {
+    clearTimeout(connectionTimer);
+    if (conn) { try { conn.close(); } catch (e) {} conn = null; }
+    if (peer) { try { peer.destroy(); } catch (e) {} peer = null; }
   }
 
-  // ---------- Signalling + peer ----------
-  function startPeer(initiator) {
-    pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
-    pc.onicecandidate = e => { if (e.candidate) send('sig', { to: partner, k: 'c', c: e.candidate }); };
-    pc.onconnectionstatechange = () => {
-      if (['failed', 'disconnected', 'closed'].includes(pc.connectionState)) lost();
-    };
-    if (initiator) {
-      setup(pc.createDataChannel('relay'));
-      pc.createOffer()
-        .then(o => pc.setLocalDescription(o))
-        .then(() => send('sig', {
-          to: partner,
-          k: 'o',
-          sdp: pc.localDescription.toJSON ? pc.localDescription.toJSON() : { type: pc.localDescription.type, sdp: pc.localDescription.sdp }
-        }));
-    } else {
-      pc.ondatachannel = e => setup(e.channel);
-    }
-  }
+  // ---------- Bind a DataConnection ----------
+  function bindConn(isHost) {
+    if (!conn) return;
 
-  async function onSig(m) {
-    const d = m.data || {};
-    if (d.to !== me) return;
-    try {
-      if (role === 'guest' && d.k === 'o' && !partner) {
-        partner = d.from;
-        startPeer(false);
-        await pc.setRemoteDescription(d.sdp);
-        remoteSet = true;
-        fpR = fp(d.sdp.sdp);
-        await pc.setLocalDescription(await pc.createAnswer());
-        fpL = fp(pc.localDescription.sdp);
-        send('sig', { to: partner, k: 'a', sdp: { type: pc.localDescription.type, sdp: pc.localDescription.sdp } });
-        for (const c of queued) await pc.addIceCandidate(c);
-        queued = [];
-      } else if (d.from !== partner) return;
-      else if (d.k === 'a' && role === 'host') {
-        await pc.setRemoteDescription(d.sdp);
-        remoteSet = true;
-        fpR = fp(d.sdp.sdp);
-        fpL = fp(pc.localDescription.sdp);
-        for (const c of queued) await pc.addIceCandidate(c);
-        queued = [];
-      } else if (d.k === 'c') {
-        remoteSet ? await pc.addIceCandidate(d.c) : queued.push(d.c);
+    conn.on('open', () => {
+      clearTimeout(connectionTimer);
+      // Guest sends hello first
+      if (!isHost) {
+        conn.send(JSON.stringify({ t: 'hello', dev }));
       }
-    } catch (e) {}
-  }
-
-  const fp = s => ((s.match(/a=fingerprint:\S+ ([0-9A-Fa-f:]+)/) || [])[1] || '').toUpperCase();
-
-  async function secNumber() {
-    const a = [fpL, fpR].sort().join('|');
-    const h = new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(a)));
-    const n = ((h[0] << 16) | (h[1] << 8) | h[2]) % 1000000;
-    const s = String(n).padStart(6, '0');
-    return s.slice(0, 3) + ' ' + s.slice(3);
-  }
-
-  // ---------- Data channel ----------
-  function setup(ch) {
-    dc = ch;
-    ch.binaryType = 'arraybuffer';
-    ch.bufferedAmountLowThreshold = 1 << 20;
-
-    ch.onopen = async () => {
+      // Show session view
       $('#pairView').classList.add('hidden');
       $('#sessView').classList.remove('hidden');
       setSync('connected', true);
-      $('#fp').textContent = await secNumber();
-      ch.send(JSON.stringify({ t: 'hi', dev }));
-      await closeRoom(); // code is dead
-    };
+      computeFingerprint();
+      conn.send(JSON.stringify({ t: 'hi', dev }));
+    });
 
-    ch.onclose = lost;
-
-    ch.onmessage = e => {
-      if (typeof e.data === 'string') {
-        const m = JSON.parse(e.data);
-        if (m.t === 'hi') $('#peerName').textContent = 'Connected to ' + String(m.dev || 'device').slice(0, 40);
-        else if (m.t === 'ok') peerOk = true, gate();
-        else if (!selfOk) return;
-        else if (m.t === 'text') addText(m.v, false);
-        else if (m.t === 'file') inc = { m, parts: [], got: 0, ui: addFile(m, false) };
-        else if (m.t === 'end' && inc) { finish(inc.ui, inc.m, new Blob(inc.parts, { type: inc.m.type })); inc = null; }
-      } else if (inc && selfOk) {
-        inc.parts.push(e.data);
-        inc.got += e.data.byteLength;
-        inc.ui.bar.style.width = (inc.got / inc.m.size * 100) + '%';
+    conn.on('data', (raw) => {
+      // Binary data (file chunks)
+      if (raw instanceof ArrayBuffer || raw instanceof Blob) {
+        if (inc && selfOk) {
+          const buf = raw instanceof Blob ? null : raw;
+          if (buf) {
+            inc.parts.push(buf);
+            inc.got += buf.byteLength;
+            inc.ui.bar.style.width = Math.min(100, (inc.got / inc.m.size) * 100) + '%';
+          } else {
+            // Blob — convert
+            raw.arrayBuffer().then(b => {
+              inc.parts.push(b);
+              inc.got += b.byteLength;
+              inc.ui.bar.style.width = Math.min(100, (inc.got / inc.m.size) * 100) + '%';
+            });
+          }
+        }
+        return;
       }
-    };
+
+      // String data (control messages)
+      let m;
+      try { m = JSON.parse(raw); } catch (e) { return; }
+
+      if (m.t === 'hi') {
+        $('#peerName').textContent = 'Connected to ' + String(m.dev || 'device').slice(0, 40);
+      }
+      else if (m.t === 'approved') {
+        say('#joinSt', 'Approved. Securing the link…');
+        // Guest is approved → open already triggered, but ensure session view
+        if ($('#sessView').classList.contains('hidden')) {
+          $('#pairView').classList.add('hidden');
+          $('#sessView').classList.remove('hidden');
+          setSync('connected', true);
+          computeFingerprint();
+          conn.send(JSON.stringify({ t: 'hi', dev }));
+        }
+      }
+      else if (m.t === 'deny') {
+        say('#joinSt', m.why || 'Refused.', 1);
+        cleanup();
+        role = null;
+      }
+      else if (m.t === 'ok') { peerOk = true; gate(); }
+      else if (!selfOk) { /* ignore non-verify messages until verified */ }
+      else if (m.t === 'text') { addText(m.v, false); }
+      else if (m.t === 'file') { inc = { m, parts: [], got: 0, ui: addFile(m, false) }; }
+      else if (m.t === 'end' && inc) {
+        finish(inc.ui, inc.m, new Blob(inc.parts, { type: inc.m.type }));
+        inc = null;
+      }
+    });
+
+    conn.on('close', lost);
+    conn.on('error', (e) => { console.warn('conn error', e); });
+  }
+
+  // ---------- Fingerprint / verification ----------
+  async function computeFingerprint() {
+    try {
+      // Use PeerJS connection ID pair as basis for a stable security number
+      const ids = [peer && peer.id, conn && conn.peer].filter(Boolean).sort().join('|');
+      const h = new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(ids + '|' + ROOM_PREFIX)));
+      const n = ((h[0] << 16) | (h[1] << 8) | h[2]) % 1000000;
+      const s = String(n).padStart(6, '0');
+      $('#fp').textContent = s.slice(0, 3) + ' ' + s.slice(3);
+    } catch (e) {
+      $('#fp').textContent = '--- ---';
+    }
   }
 
   function gate() {
@@ -805,7 +754,7 @@
 
   $('#match').onclick = () => {
     selfOk = true;
-    dc.send(JSON.stringify({ t: 'ok' }));
+    if (conn && conn.open) conn.send(JSON.stringify({ t: 'ok' }));
     $('#match').disabled = true;
     $('#nomatch').classList.add('hidden');
     gate();
@@ -820,12 +769,9 @@
   }
 
   function end() {
-    try { dc && dc.close(); } catch (e) {}
-    try { pc && pc.close(); } catch (e) {}
-    closeRoom();
+    cleanup();
     location.reload();
   }
-
   $('#end').onclick = end;
 
   window.addEventListener('beforeunload', e => {
@@ -837,7 +783,8 @@
 
   // ---------- Feed ----------
   function row(icon, title, sub) {
-    $('#empty') && $('#empty').remove();
+    const empty = $('#empty');
+    if (empty) empty.remove();
     const d = document.createElement('div');
     d.className = 'item fade-in';
     const ty = document.createElement('div');
@@ -876,7 +823,7 @@
       const b = document.createElement('button');
       b.className = 'b q sm';
       b.textContent = 'Copy';
-      b.onclick = () => navigator.clipboard.writeText(v);
+      b.onclick = () => navigator.clipboard.writeText(v).catch(() => {});
       r.d.append(b);
     }
   }
@@ -887,7 +834,7 @@
     return row(ext(m.name), m.name, (mine ? 'Sending · ' : 'Receiving · ') + fmt(m.size));
   }
 
-  async function finish(ui, m, blob) {
+  function finish(ui, m, blob) {
     ui.bw.remove();
     ui.s.textContent = 'Received · ' + fmt(m.size);
     if (/^image\//.test(m.type) && m.size < 8e6) {
@@ -903,45 +850,49 @@
     const b = document.createElement('button');
     b.className = 'b sm';
     b.textContent = 'Save';
-    b.onclick = async () => {
-      try {
-        dls = dls || await window.claude.use('downloads');
-        if (!dls) throw 0;
-        await dls.save({ filename: m.name, data: blob });
-      } catch (e) {
-        if (!e || e.code !== 'declined') {
-          const u = URL.createObjectURL(blob);
-          window.open(u, '_blank');
-        }
-      }
+    b.onclick = () => {
+      // Native browser download — no external SDK needed
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = m.name;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
     };
     ui.d.append(b);
   }
 
   $('#sendTxt').onclick = () => {
     const v = $('#txt').value.trim();
-    if (!v || !dc || dc.readyState !== 'open') return;
-    dc.send(JSON.stringify({ t: 'text', v }));
+    if (!v || !conn || !conn.open) return;
+    conn.send(JSON.stringify({ t: 'text', v }));
     addText(v, true);
     $('#txt').value = '';
   };
-
   $('#txt').onkeydown = e => { if (e.key === 'Enter') $('#sendTxt').click(); };
 
+  // ---------- File sending ----------
+  const CHUNK = 16384;
+
   async function sendFile(f) {
+    if (!conn || !conn.open) return;
     const m = { t: 'file', name: f.name, size: f.size, type: f.type || 'application/octet-stream' };
     const ui = addFile(m, true);
-    dc.send(JSON.stringify(m));
-    for (let o = 0; o < f.size; o += 16384) {
-      if (dc.bufferedAmount > 1 << 20) {
-        await new Promise(r => {
-          dc.onbufferedamountlow = () => { dc.onbufferedamountlow = null; r(); };
-        });
-      }
-      dc.send(await f.slice(o, o + 16384).arrayBuffer());
-      ui.bar.style.width = Math.min(100, (o + 16384) / f.size * 100) + '%';
+    conn.send(JSON.stringify(m));
+
+    let offset = 0;
+    while (offset < f.size) {
+      const slice = f.slice(offset, offset + CHUNK);
+      const buf = await slice.arrayBuffer();
+      conn.send(buf);
+      offset += buf.byteLength;
+      ui.bar.style.width = Math.min(100, (offset / f.size) * 100) + '%';
+      // Yield to UI occasionally
+      if (offset % (CHUNK * 64) === 0) await new Promise(r => setTimeout(r, 0));
     }
-    dc.send(JSON.stringify({ t: 'end' }));
+    conn.send(JSON.stringify({ t: 'end' }));
     ui.bw.remove();
     ui.s.textContent = 'Sent · ' + fmt(f.size);
   }
