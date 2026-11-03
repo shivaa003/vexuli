@@ -1,84 +1,443 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Relay – private device-to-device transfer</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
---bg:#f5f6f8;--panel:#fff;--line:#e2e5ea;--text:#0e131b;--muted:#6a7383;--acc:#2b59d9;--accbg:#e9eefc;--danger:#c2372f;--ok:#1f8f5f;--hover:#f0f2f6;
---sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b0d11;--panel:#11141a;--line:#1e232c;--text:#e7eaf0;--muted:#868fa0;--acc:#8aa8ff;--accbg:#18203a;--danger:#ff7b72;--ok:#3fb27f;--hover:#161a22}}
-:root[data-theme="dark"]{--bg:#0b0d11;--panel:#11141a;--line:#1e232c;--text:#e7eaf0;--muted:#868fa0;--acc:#8aa8ff;--accbg:#18203a;--danger:#ff7b72;--ok:#3fb27f;--hover:#161a22}
-*{box-sizing:border-box}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 var(--sans);-webkit-font-smoothing:antialiased;
-background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:48px 48px;background-attachment:fixed}
-body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse at 50% 0,transparent 0,var(--bg) 75%);pointer-events:none}
-.wrap{position:relative;max-width:900px;margin:0 auto;padding:22px 20px 70px}
-.top{display:flex;align-items:center;justify-content:space-between;padding-bottom:18px;border-bottom:1px solid var(--line)}
-.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.1rem}
-.mark{width:22px;height:22px;border:2px solid var(--acc);border-radius:6px;position:relative}
-.mark::after{content:"";position:absolute;inset:4px;background:var(--acc);border-radius:2px}
-.sync{font:500 .75rem var(--mono);color:var(--muted);display:flex;align-items:center;gap:8px}
-.sync i{width:7px;height:7px;border-radius:50%;background:var(--muted)}
-.sync.ok i{background:var(--ok)}
-.hero{padding:40px 0 24px}
-h1{font-size:clamp(1.9rem,5vw,2.8rem);line-height:1.1;letter-spacing:-.035em;margin:0 0 12px;max-width:640px}
-.lead{color:var(--muted);max-width:560px;margin:0}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px}
-.pair{display:grid;grid-template-columns:1fr 1fr;margin-bottom:20px}
-@media(max-width:700px){.pair{grid-template-columns:1fr}.pair>div:first-child{border-right:0!important;border-bottom:1px solid var(--line)}}
-.pair>div{padding:26px 24px}
-.pair>div:first-child{border-right:1px solid var(--line)}
-.lab{font:500 .72rem var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
-h3{margin:0 0 6px;font-size:1.05rem}
-p.s{margin:0 0 16px;color:var(--muted);font-size:.88rem}
-.code{font:600 2.6rem var(--mono);letter-spacing:.35em;padding:14px 0 14px .35em;text-align:center;border:1px dashed var(--line);border-radius:8px;background:var(--bg);margin-bottom:10px}
-.digits{display:flex;gap:8px;margin-bottom:12px}
-.digits input{width:100%;min-width:0;text-align:center;font:600 1.7rem var(--mono);padding:10px 0;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:8px;outline:none}
-.digits input:focus{border-color:var(--acc)}
-input[type=text]{width:100%;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font:inherit;outline:none}
-input[type=text]:focus{border-color:var(--acc)}
-.b{appearance:none;cursor:pointer;font:600 .85rem var(--sans);padding:9px 14px;border-radius:8px;border:1px solid var(--acc);background:var(--acc);color:var(--bg)}
-.b:hover{filter:brightness(1.08)}
-.b.q{background:none;border-color:var(--line);color:var(--text)}
-.b.d{background:none;border-color:var(--danger);color:var(--danger)}
-.row{display:flex;gap:8px;flex-wrap:wrap}
-.st{font:.78rem var(--mono);color:var(--muted);margin-top:12px;min-height:1.2em}
-.st.err{color:var(--danger)}
-.ask{margin-top:14px;padding:14px;border:1px solid var(--acc);border-radius:8px;background:var(--accbg)}
-.ask p{margin:0 0 10px;font-size:.9rem}
-.hidden{display:none!important}
-.sess{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:14px}
-.sess .who{font-weight:600}
-.sess .sub{font:.75rem var(--mono);color:var(--muted)}
-.fp{font:600 1.3rem var(--mono);letter-spacing:.12em;color:var(--acc)}
-.verify{padding:16px 20px;margin-bottom:14px;border-color:var(--acc);background:var(--accbg)}
-.verify p{margin:0 0 10px;font-size:.88rem}
-.drop{display:block;padding:34px 22px;cursor:pointer;border:1px dashed var(--line);border-radius:10px;background:var(--panel);transition:.15s;text-align:left}
-.drop:hover,.drop.over{border-color:var(--acc);background:var(--accbg)}
-.drop .t{font-weight:600}.drop .m{color:var(--muted);font-size:.85rem}
-.send{display:flex;gap:8px;margin:12px 0 22px}
-.lock{opacity:.4;pointer-events:none}
-.list{overflow:hidden}
-.item{display:grid;grid-template-columns:44px 1fr auto;gap:14px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line)}
-.item:last-child{border:0}
-.ty{width:44px;height:44px;border-radius:8px;border:1px solid var(--line);background:var(--bg);display:grid;place-items:center;font:600 .68rem var(--mono);color:var(--acc);overflow:hidden}
-.ty img{width:100%;height:100%;object-fit:cover}
-.nm{min-width:0}.nm .n{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.nm .n a{color:var(--acc)}
-.nm .d{font:.72rem var(--mono);color:var(--muted)}
-.bar{height:3px;background:var(--line);border-radius:3px;margin-top:6px;overflow:hidden}
-.bar i{display:block;height:100%;width:0;background:var(--acc)}
-.empty{padding:34px;text-align:center;color:var(--muted)}
-.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:26px}
-@media(max-width:700px){.facts{grid-template-columns:1fr}}
-.facts div{font-size:.82rem;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
-.facts b{display:block;color:var(--text);font-size:.85rem;margin-bottom:2px}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Relay · private device‑to‑device</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f7f8fa;
+      --panel: #ffffff;
+      --panel-elev: #ffffff;
+      --line: #d0d5dd;
+      --line-soft: #e4e7ec;
+      --text: #0b0f19;
+      --muted: #5e6b81;
+      --acc: #1e3a8a;        /* deep indigo – serious, secure */
+      --acc-light: #e8edf9;
+      --acc-hover: #152c66;
+      --danger: #b91c1c;
+      --ok: #0f6e4a;
+      --hover: #f1f3f7;
+      --radius: 12px;
+      --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+      --shadow: 0 1px 3px rgba(0,0,0,.04), 0 8px 20px -8px rgba(0,0,0,.06);
+      --transition: .18s ease;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #0c0f14;
+        --panel: #13171e;
+        --panel-elev: #1a1f27;
+        --line: #2a313b;
+        --line-soft: #20262f;
+        --text: #e8edf5;
+        --muted: #8b98aa;
+        --acc: #5b8cff;
+        --acc-light: #1b2540;
+        --acc-hover: #7a9eff;
+        --danger: #f87171;
+        --ok: #34d399;
+        --hover: #1c222b;
+        --shadow: 0 1px 3px rgba(0,0,0,.3), 0 8px 24px -8px rgba(0,0,0,.5);
+      }
+    }
+    * { box-sizing: border-box; }
+    html { scroll-padding-top: env(safe-area-inset-top,0px); }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 15px/1.5 var(--sans);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+    /* subtle grid – techie but not loud */
+    body {
+      background-image:
+        linear-gradient(var(--line-soft) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+      background-size: 40px 40px;
+      background-attachment: fixed;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0, transparent 0%, var(--bg) 80%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px 20px 70px;
+      padding-top: max(24px, env(safe-area-inset-top,0px));
+    }
+
+    /* ---------- header ---------- */
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 0;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.15rem;
+      letter-spacing: -.02em;
+    }
+    .mark {
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--acc);
+      border-radius: 7px;
+      position: relative;
+      background: var(--panel);
+    }
+    .mark::after {
+      content: "";
+      position: absolute;
+      inset: 5px;
+      background: var(--acc);
+      border-radius: 2px;
+      transition: var(--transition);
+    }
+    .sync {
+      font: 500 .75rem var(--mono);
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--panel);
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+    }
+    .sync i {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--muted);
+      transition: .2s;
+    }
+    .sync.ok i { background: var(--ok); box-shadow: 0 0 8px var(--ok); }
+
+    /* ---------- hero ---------- */
+    .hero { padding: 36px 0 24px; }
+    h1 {
+      font-size: clamp(1.9rem, 5vw, 2.7rem);
+      line-height: 1.1;
+      letter-spacing: -.035em;
+      margin: 0 0 12px;
+      max-width: 660px;
+      font-weight: 700;
+    }
+    .lead {
+      color: var(--muted);
+      max-width: 560px;
+      margin: 0;
+      font-size: 1.02rem;
+    }
+
+    /* ---------- panels ---------- */
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      margin-bottom: 22px;
+      overflow: hidden;
+    }
+    @media (max-width: 700px) {
+      .pair { grid-template-columns: 1fr; }
+      .pair > div:first-child { border-right: 0 !important; border-bottom: 1px solid var(--line); }
+    }
+    .pair > div { padding: 26px 24px; }
+    .pair > div:first-child { border-right: 1px solid var(--line); }
+    .lab {
+      font: 500 .7rem var(--mono);
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 10px;
+    }
+    h3 { margin: 0 0 6px; font-size: 1.05rem; font-weight: 600; }
+    p.s { margin: 0 0 16px; color: var(--muted); font-size: .88rem; }
+
+    /* code display */
+    .code {
+      font: 600 2.8rem var(--mono);
+      letter-spacing: .3em;
+      padding: 16px 0 16px .3em;
+      text-align: center;
+      border: 1px dashed var(--line);
+      border-radius: 10px;
+      background: var(--bg);
+      margin-bottom: 12px;
+      color: var(--text);
+      transition: var(--transition);
+      user-select: all;
+    }
+
+    /* digit inputs */
+    .digits {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .digits input {
+      width: 100%;
+      min-width: 0;
+      text-align: center;
+      font: 600 1.7rem var(--mono);
+      padding: 12px 0;
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      outline: none;
+      transition: var(--transition);
+    }
+    .digits input:focus {
+      border-color: var(--acc);
+      box-shadow: 0 0 0 3px var(--acc-light);
+      background: var(--panel);
+    }
+
+    /* inputs & buttons */
+    input[type=text] {
+      width: 100%;
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 11px 14px;
+      font: inherit;
+      outline: none;
+      transition: var(--transition);
+    }
+    input[type=text]:focus {
+      border-color: var(--acc);
+      box-shadow: 0 0 0 3px var(--acc-light);
+      background: var(--panel);
+    }
+    .b {
+      appearance: none;
+      cursor: pointer;
+      font: 600 .85rem var(--sans);
+      padding: 10px 18px;
+      border-radius: 10px;
+      border: 1px solid var(--acc);
+      background: var(--acc);
+      color: #fff;
+      transition: var(--transition);
+      letter-spacing: -.01em;
+      white-space: nowrap;
+    }
+    .b:hover { background: var(--acc-hover); border-color: var(--acc-hover); }
+    .b:active { transform: scale(.97); }
+    .b.q {
+      background: var(--panel);
+      border-color: var(--line);
+      color: var(--text);
+    }
+    .b.q:hover { background: var(--hover); border-color: var(--muted); }
+    .b.d {
+      background: var(--panel);
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+    .b.d:hover { background: var(--danger); color: #fff; }
+    .b.sm { padding: 7px 14px; font-size: .8rem; }
+
+    .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .st {
+      font: .78rem var(--mono);
+      color: var(--muted);
+      margin-top: 12px;
+      min-height: 1.2em;
+      transition: var(--transition);
+    }
+    .st.err { color: var(--danger); }
+
+    /* ask box */
+    .ask {
+      margin-top: 16px;
+      padding: 16px;
+      border: 1px solid var(--acc);
+      border-radius: 10px;
+      background: var(--acc-light);
+      transition: var(--transition);
+    }
+    .ask p { margin: 0 0 12px; font-size: .9rem; font-weight: 500; }
+    .hidden { display: none !important; }
+
+    /* session view */
+    .sess {
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .sess .who { font-weight: 600; font-size: .95rem; }
+    .sess .sub { font: .75rem var(--mono); color: var(--muted); margin-top: 2px; }
+    .fp {
+      font: 600 1.3rem var(--mono);
+      letter-spacing: .12em;
+      color: var(--acc);
+      background: var(--acc-light);
+      padding: 4px 12px;
+      border-radius: 8px;
+      display: inline-block;
+    }
+    .verify {
+      padding: 18px 22px;
+      margin-bottom: 16px;
+      border-color: var(--acc);
+      background: var(--acc-light);
+      transition: var(--transition);
+    }
+    .verify p { margin: 0 0 12px; font-size: .88rem; }
+
+    /* drop zone */
+    .drop {
+      display: block;
+      padding: 36px 24px;
+      cursor: pointer;
+      border: 1px dashed var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      transition: var(--transition);
+      text-align: left;
+      box-shadow: var(--shadow);
+    }
+    .drop:hover, .drop.over {
+      border-color: var(--acc);
+      background: var(--acc-light);
+    }
+    .drop .t { font-weight: 600; font-size: .95rem; }
+    .drop .m { color: var(--muted); font-size: .85rem; margin-top: 3px; }
+
+    .send {
+      display: flex;
+      gap: 8px;
+      margin: 14px 0 22px;
+    }
+    .send input { flex: 1; }
+
+    .lock { opacity: .4; pointer-events: none; transition: opacity .2s; }
+
+    /* feed */
+    .list {
+      overflow: hidden;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .item {
+      display: grid;
+      grid-template-columns: 44px 1fr auto;
+      gap: 14px;
+      align-items: center;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line-soft);
+      transition: background var(--transition);
+    }
+    .item:hover { background: var(--hover); }
+    .item:last-child { border-bottom: 0; }
+    .ty {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--bg);
+      display: grid;
+      place-items: center;
+      font: 600 .68rem var(--mono);
+      color: var(--acc);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .ty img { width: 100%; height: 100%; object-fit: cover; }
+    .nm { min-width: 0; }
+    .nm .n {
+      font-weight: 500;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: .92rem;
+    }
+    .nm .n a { color: var(--acc); text-decoration: none; }
+    .nm .n a:hover { text-decoration: underline; }
+    .nm .d { font: .72rem var(--mono); color: var(--muted); margin-top: 1px; }
+    .bar {
+      height: 3px;
+      background: var(--line-soft);
+      border-radius: 3px;
+      margin-top: 7px;
+      overflow: hidden;
+    }
+    .bar i {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: var(--acc);
+      border-radius: 3px;
+      transition: width .15s linear;
+    }
+    .empty {
+      padding: 40px 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    /* facts */
+    .facts {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 28px;
+    }
+    @media (max-width: 700px) { .facts { grid-template-columns: 1fr; gap: 10px; } }
+    .facts div {
+      font-size: .82rem;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+      line-height: 1.5;
+    }
+    .facts b {
+      display: block;
+      color: var(--text);
+      font-size: .85rem;
+      margin-bottom: 3px;
+      font-weight: 600;
+    }
+
+    /* utility */
+    .fade-in { animation: fade .25s ease; }
+    @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
 </head>
 <body>
 <div class="wrap">
@@ -87,17 +446,18 @@ input[type=text]:focus{border-color:var(--acc)}
     <div class="sync" id="sync"><i></i><span id="syncT">no session</span></div>
   </div>
 
+  <!-- PAIR VIEW -->
   <div id="pairView">
     <div class="hero">
       <h1>Private transfer between exactly two devices.</h1>
-      <p class="lead">Pair with a one-time 4-digit code. Files, photos, documents and links then travel directly between the two devices, encrypted, and are never stored on a server.</p>
+      <p class="lead">Pair with a one‑time 4‑digit code. Files, photos, documents and links then travel directly between the two devices, encrypted, and are never stored on a server.</p>
     </div>
 
     <div class="panel pair">
       <div>
         <div class="lab">Device A · Send a code</div>
         <h3>Create a session</h3>
-        <p class="s">Generate a one-time code and read it out to the other device.</p>
+        <p class="s">Generate a one‑time code and read it out to the other device.</p>
         <div id="hostIdle"><button class="b" id="mk">Generate code</button></div>
         <div id="hostLive" class="hidden">
           <div class="code" id="codeBox">0000</div>
@@ -106,241 +466,505 @@ input[type=text]:focus{border-color:var(--acc)}
             <p id="askT"></p>
             <div class="row"><button class="b" id="allow">Allow</button><button class="b q" id="refuse">Refuse</button></div>
           </div>
-          <div class="row" style="margin-top:12px"><button class="b q" id="cancel">Cancel</button></div>
+          <div class="row" style="margin-top:14px"><button class="b q" id="cancel">Cancel</button></div>
         </div>
       </div>
       <div>
         <div class="lab">Device B · Enter a code</div>
         <h3>Join a session</h3>
-        <p class="s">Type the 4-digit code shown on the first device.</p>
-        <div class="digits" id="digits"><input inputmode="numeric" maxlength="1" aria-label="digit 1"><input inputmode="numeric" maxlength="1" aria-label="digit 2"><input inputmode="numeric" maxlength="1" aria-label="digit 3"><input inputmode="numeric" maxlength="1" aria-label="digit 4"></div>
+        <p class="s">Type the 4‑digit code shown on the first device.</p>
+        <div class="digits" id="digits">
+          <input inputmode="numeric" maxlength="1" aria-label="digit 1">
+          <input inputmode="numeric" maxlength="1" aria-label="digit 2">
+          <input inputmode="numeric" maxlength="1" aria-label="digit 3">
+          <input inputmode="numeric" maxlength="1" aria-label="digit 4">
+        </div>
         <button class="b" id="jn">Connect</button>
         <div class="st" id="joinSt"></div>
       </div>
     </div>
 
     <div class="facts">
-      <div><b>Single-use code</b>The code locks as soon as one device is approved. A third device is refused.</div>
+      <div><b>Single‑use code</b>The code locks as soon as one device is approved. A third device is refused.</div>
       <div><b>Direct and encrypted</b>Data flows device to device over an encrypted channel. Nothing is uploaded or stored.</div>
       <div><b>Verified on both screens</b>A security number must match on both devices before anything can be sent.</div>
     </div>
   </div>
 
+  <!-- SESSION VIEW -->
   <div id="sessView" class="hidden">
     <div class="panel sess">
-      <div><div class="who" id="peerName">Connected</div><div class="sub">Direct encrypted link · nothing is stored</div></div>
+      <div>
+        <div class="who" id="peerName">Connected</div>
+        <div class="sub">Direct encrypted link · nothing is stored</div>
+      </div>
       <button class="b d" id="end">End session</button>
     </div>
+
     <div class="panel verify" id="verify">
       <div class="lab">Security check</div>
       <div class="fp" id="fp">000 000</div>
       <p>Both devices must show the same number. If they differ, someone may be intercepting the connection.</p>
       <div class="row"><button class="b" id="match">Numbers match</button><button class="b d" id="nomatch">They differ</button></div>
     </div>
+
     <div id="tools" class="lock">
-      <label class="drop" id="drop"><div class="t">Drop any files here or browse</div><div class="m">Photos, PDFs, Word, Excel, archives, video. Sent directly to the other device.</div><input type="file" id="file" multiple hidden></label>
-      <div class="send"><input type="text" id="txt" placeholder="Paste a link or type a note"><button class="b" id="sendTxt">Send</button></div>
-      <div class="panel list" id="feed"><div class="empty" id="empty">Transfers in this session appear here.</div></div>
+      <label class="drop" id="drop">
+        <div class="t">Drop any files here or browse</div>
+        <div class="m">Photos, PDFs, Word, Excel, archives, video. Sent directly to the other device.</div>
+        <input type="file" id="file" multiple hidden>
+      </label>
+      <div class="send">
+        <input type="text" id="txt" placeholder="Paste a link or type a note">
+        <button class="b" id="sendTxt">Send</button>
+      </div>
+      <div class="panel list" id="feed">
+        <div class="empty" id="empty">Transfers in this session appear here.</div>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
-const $=s=>document.querySelector(s);
-const hex=()=>[...crypto.getRandomValues(new Uint8Array(8))].map(b=>b.toString(16).padStart(2,'0')).join('');
-const me=hex();
-const dev=(()=>{const u=navigator.userAgent;const os=/Android/.test(u)?'Android':/iPhone|iPad/.test(u)?'iOS':/Mac/.test(u)?'macOS':/Windows/.test(u)?'Windows':/Linux/.test(u)?'Linux':'Device';
-const br=/Edg\//.test(u)?'Edge':/Chrome\//.test(u)?'Chrome':/Safari\//.test(u)?'Safari':/Firefox\//.test(u)?'Firefox':'Browser';return os+' · '+br})();
-const fmt=n=>n<1024?n+' B':n<1048576?(n/1024).toFixed(1)+' KB':n<1073741824?(n/1048576).toFixed(1)+' MB':(n/1073741824).toFixed(2)+' GB';
-let room=null,role=null,code=null,partner=null,pending=null,pc,dc,dls=null,expiry=null;
-let selfOk=false,peerOk=false,inc=null,queued=[],remoteSet=false,fpL='',fpR='';
+(() => {
+  "use strict";
 
-const setSync=(t,ok)=>{$('#syncT').textContent=t;$('#sync').classList.toggle('ok',!!ok)};
-const say=(id,t,err)=>{const e=$(id);e.textContent=t;e.classList.toggle('err',!!err)};
+  const $ = s => document.querySelector(s);
 
-async function getRoom(){
-  const c=window.claude;
-  const r=await c.use('room');
-  return r;
-}
-async function open(name){
-  const root=await getRoom();
-  if(!root||!root.join)throw new Error('Pairing needs you to be signed in to your Claude account.');
-  room=await root.join('pair-'+name);
-  room.on('hello',onHello);room.on('deny',onDeny);room.on('sig',onSig);
-}
-async function close(){try{if(room)await room.leave()}catch(e){}room=null}
-const send=(topic,data)=>room&&room.emit(topic,{...data,from:me});
+  // ---------- helpers ----------
+  const hex = () => [...crypto.getRandomValues(new Uint8Array(8))].map(b => b.toString(16).padStart(2, '0')).join('');
+  const me = hex();
 
-/* ---------- Host ---------- */
-$('#mk').onclick=async()=>{
-  $('#hostIdle').classList.add('hidden');$('#hostLive').classList.remove('hidden');
-  role='host';say('#hostSt','Generating a unique code…');
-  try{
-    for(let i=0;i<6;i++){
-      code=String(1000+(crypto.getRandomValues(new Uint32Array(1))[0]%9000));
-      await open(code);
-      await room.presence({role:'host'});
-      await new Promise(r=>setTimeout(r,1200));
-      const seen=await new Promise(res=>{let done=false;const fin=v=>{if(!done){done=true;res(v)}};setTimeout(()=>fin(false),1500);const u=room.onPeers(c=>{fin((c.peers||[]).some(p=>!p.isMe&&p.presence&&p.presence.role==='host'));try{u&&u()}catch(e){}})});
-      if(!seen)break;
-      await close();code=null;
-    }
-    if(!code)throw new Error('Could not reserve a code. Try again.');
-    $('#codeBox').textContent=code;setSync('waiting',false);
-    say('#hostSt','Waiting for the other device. Code expires in 5 minutes.');
-    expiry=setTimeout(()=>{if(!partner){say('#hostSt','Code expired.',1);cancelHost()}},300000);
-  }catch(e){say('#hostSt',e.message||'Could not start.',1)}
-};
-function onHello(m){
-  const d=m.data||{};if(role!=='host'||!d.from)return;
-  if(partner||pending){send('deny',{to:d.from,why:'This code is already in use.'});return}
-  pending=d.from;
-  $('#askT').textContent='“'+String(d.dev||'A device').slice(0,40)+'” wants to connect. Only allow it if this is your own device.';
-  $('#ask').classList.remove('hidden');
-}
-$('#allow').onclick=()=>{
-  if(!pending)return;partner=pending;pending=null;$('#ask').classList.add('hidden');
-  clearTimeout(expiry);say('#hostSt','Approved. Securing the link…');startPeer(true);
-};
-$('#refuse').onclick=()=>{if(pending)send('deny',{to:pending,why:'The other device refused the connection.'});pending=null;$('#ask').classList.add('hidden')};
-function cancelHost(){close();role=null;code=null;partner=null;pending=null;clearTimeout(expiry);$('#hostLive').classList.add('hidden');$('#hostIdle').classList.remove('hidden');$('#ask').classList.add('hidden');setSync('no session',false)}
-$('#cancel').onclick=cancelHost;
+  const dev = (() => {
+    const u = navigator.userAgent;
+    const os = /Android/.test(u) ? 'Android' : /iPhone|iPad/.test(u) ? 'iOS' : /Mac/.test(u) ? 'macOS' : /Windows/.test(u) ? 'Windows' : /Linux/.test(u) ? 'Linux' : 'Device';
+    const br = /Edg\//.test(u) ? 'Edge' : /Chrome\//.test(u) ? 'Chrome' : /Safari\//.test(u) ? 'Safari' : /Firefox\//.test(u) ? 'Firefox' : 'Browser';
+    return os + ' · ' + br;
+  })();
 
-/* ---------- Joiner ---------- */
-const dg=[...document.querySelectorAll('#digits input')];
-dg.forEach((el,i)=>{
-  el.oninput=()=>{el.value=el.value.replace(/\D/g,'').slice(-1);if(el.value&&dg[i+1])dg[i+1].focus()};
-  el.onkeydown=e=>{if(e.key==='Backspace'&&!el.value&&dg[i-1])dg[i-1].focus();if(e.key==='Enter')$('#jn').click()};
-  el.onpaste=e=>{const t=(e.clipboardData.getData('text')||'').replace(/\D/g,'').slice(0,4);if(t){e.preventDefault();dg.forEach((x,k)=>x.value=t[k]||'')}};
-});
-$('#jn').onclick=async()=>{
-  const c=dg.map(x=>x.value).join('');
-  if(c.length!==4)return say('#joinSt','Enter all 4 digits.',1);
-  role='guest';code=c;say('#joinSt','Looking for the device…');
-  try{
-    await open(c);await room.presence({role:'guest'});
-    let tries=0;
-    const t=setInterval(()=>{
-      if(partner||role!=='guest'){clearInterval(t);return}
-      if(++tries>8){clearInterval(t);say('#joinSt','No device found for that code.',1);close();role=null;return}
-      send('hello',{dev});
-    },1800);
-    setTimeout(()=>send('hello',{dev}),500);
-    say('#joinSt','Waiting for the other device to approve…');
-  }catch(e){say('#joinSt',e.message||'Could not connect.',1)}
-};
-function onDeny(m){const d=m.data||{};if(d.to!==me)return;say('#joinSt',d.why||'Refused.',1);close();role=null}
+  const fmt = n => n < 1024 ? n + ' B' : n < 1048576 ? (n / 1024).toFixed(1) + ' KB' : n < 1073741824 ? (n / 1048576).toFixed(1) + ' MB' : (n / 1073741824).toFixed(2) + ' GB';
 
-/* ---------- Signalling + peer ---------- */
-function startPeer(initiator){
-  pc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});
-  pc.onicecandidate=e=>{if(e.candidate)send('sig',{to:partner,k:'c',c:e.candidate})};
-  pc.onconnectionstatechange=()=>{if(['failed','disconnected','closed'].includes(pc.connectionState))lost()};
-  if(initiator){
-    setup(pc.createDataChannel('relay'));
-    pc.createOffer().then(o=>pc.setLocalDescription(o)).then(()=>send('sig',{to:partner,k:'o',sdp:pc.localDescription.toJSON?pc.localDescription.toJSON():{type:pc.localDescription.type,sdp:pc.localDescription.sdp}}));
-  }else pc.ondatachannel=e=>setup(e.channel);
-}
-async function onSig(m){
-  const d=m.data||{};if(d.to!==me)return;
-  try{
-    if(role==='guest'&&d.k==='o'&&!partner){
-      partner=d.from;startPeer(false);
-      await pc.setRemoteDescription(d.sdp);remoteSet=true;fpR=fp(d.sdp.sdp);
-      await pc.setLocalDescription(await pc.createAnswer());fpL=fp(pc.localDescription.sdp);
-      send('sig',{to:partner,k:'a',sdp:{type:pc.localDescription.type,sdp:pc.localDescription.sdp}});
-      for(const c of queued)await pc.addIceCandidate(c);queued=[];
-    }else if(d.from!==partner)return;
-    else if(d.k==='a'&&role==='host'){await pc.setRemoteDescription(d.sdp);remoteSet=true;fpR=fp(d.sdp.sdp);fpL=fp(pc.localDescription.sdp);for(const c of queued)await pc.addIceCandidate(c);queued=[]}
-    else if(d.k==='c'){remoteSet?await pc.addIceCandidate(d.c):queued.push(d.c)}
-  }catch(e){}
-}
-const fp=s=>((s.match(/a=fingerprint:\S+ ([0-9A-Fa-f:]+)/)||[])[1]||'').toUpperCase();
-async function secNumber(){
-  const a=[fpL,fpR].sort().join('|');
-  const h=new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(a)));
-  const n=((h[0]<<16)|(h[1]<<8)|h[2])%1000000;const s=String(n).padStart(6,'0');return s.slice(0,3)+' '+s.slice(3);
-}
+  let room = null, role = null, code = null, partner = null, pending = null, pc, dc, dls = null, expiry = null;
+  let selfOk = false, peerOk = false, inc = null, queued = [], remoteSet = false, fpL = '', fpR = '';
 
-/* ---------- Data channel ---------- */
-function setup(ch){
-  dc=ch;ch.binaryType='arraybuffer';ch.bufferedAmountLowThreshold=1<<20;
-  ch.onopen=async()=>{
-    $('#pairView').classList.add('hidden');$('#sessView').classList.remove('hidden');
-    setSync('connected',true);$('#fp').textContent=await secNumber();
-    ch.send(JSON.stringify({t:'hi',dev}));
-    await close(); /* code is now dead: nobody else can use it */
-  };
-  ch.onclose=lost;
-  ch.onmessage=e=>{
-    if(typeof e.data==='string'){
-      const m=JSON.parse(e.data);
-      if(m.t==='hi')$('#peerName').textContent='Connected to '+String(m.dev||'device').slice(0,40);
-      else if(m.t==='ok')peerOk=true,gate();
-      else if(!selfOk)return;
-      else if(m.t==='text')addText(m.v,false);
-      else if(m.t==='file')inc={m,parts:[],got:0,ui:addFile(m,false)};
-      else if(m.t==='end'&&inc){finish(inc.ui,inc.m,new Blob(inc.parts,{type:inc.m.type}));inc=null}
-    }else if(inc&&selfOk){inc.parts.push(e.data);inc.got+=e.data.byteLength;inc.ui.bar.style.width=(inc.got/inc.m.size*100)+'%'}
-  };
-}
-function gate(){$('#tools').classList.toggle('lock',!(selfOk&&peerOk));if(selfOk&&peerOk){$('#verify').classList.add('hidden')}else if(selfOk)$('#verify p').textContent='Waiting for the other device to confirm the same number…'}
-$('#match').onclick=()=>{selfOk=true;dc.send(JSON.stringify({t:'ok'}));$('#match').disabled=true;$('#nomatch').classList.add('hidden');gate()};
-$('#nomatch').onclick=()=>{end(true)};
-function lost(){if($('#sessView').classList.contains('hidden'))return;setSync('disconnected',false);$('#peerName').textContent='Disconnected'}
-function end(){try{dc&&dc.close()}catch(e){}try{pc&&pc.close()}catch(e){}close();location.reload()}
-$('#end').onclick=end;
-window.addEventListener('beforeunload',e=>{if(!$('#sessView').classList.contains('hidden')){e.preventDefault();e.returnValue=''}});
+  const setSync = (t, ok) => { $('#syncT').textContent = t; $('#sync').classList.toggle('ok', !!ok); };
+  const say = (id, t, err) => { const e = $(id); e.textContent = t; e.classList.toggle('err', !!err); };
 
-/* ---------- Feed ---------- */
-function row(icon,title,sub){
-  $('#empty')&&$('#empty').remove();
-  const d=document.createElement('div');d.className='item';
-  const ty=document.createElement('div');ty.className='ty';ty.textContent=icon;
-  const nm=document.createElement('div');nm.className='nm';
-  const n=document.createElement('div');n.className='n';
-  typeof title==='string'?n.textContent=title:n.append(title);
-  const s=document.createElement('div');s.className='d';s.textContent=sub;
-  const bw=document.createElement('div');bw.className='bar';const bar=document.createElement('i');bw.append(bar);
-  nm.append(n,s,bw);d.append(ty,nm);$('#feed').prepend(d);
-  return {d,ty,bw,bar,s,n};
-}
-function addText(v,mine){
-  let t=v;
-  if(/^https?:\/\/\S+$/i.test(v.trim())){t=document.createElement('a');t.href=v.trim();t.target='_blank';t.rel='noopener noreferrer';t.textContent=v.trim()}
-  const r=row(/^https?:/i.test(v)?'URL':'TXT',t,mine?'Sent':'Received');r.bw.remove();
-  if(!mine){const b=document.createElement('button');b.className='b q';b.textContent='Copy';b.onclick=()=>navigator.clipboard.writeText(v);r.d.append(b)}
-}
-const ext=n=>(n.split('.').pop()||'file').slice(0,4).toUpperCase();
-function addFile(m,mine){return row(ext(m.name),m.name,(mine?'Sending · ':'Receiving · ')+fmt(m.size))}
-async function finish(ui,m,blob){
-  ui.bw.remove();ui.s.textContent='Received · '+fmt(m.size);
-  if(/^image\//.test(m.type)&&m.size<8e6){const fr=new FileReader();fr.onload=()=>{const im=new Image();im.src=fr.result;ui.ty.textContent='';ui.ty.append(im)};fr.readAsDataURL(blob)}
-  const b=document.createElement('button');b.className='b';b.textContent='Save';
-  b.onclick=async()=>{
-    try{dls=dls||await window.claude.use('downloads');if(!dls)throw 0;await dls.save({filename:m.name,data:blob})}
-    catch(e){if(!e||e.code!=='declined'){const u=URL.createObjectURL(blob);window.open(u,'_blank')}}
-  };
-  ui.d.append(b);
-}
-$('#sendTxt').onclick=()=>{const v=$('#txt').value.trim();if(!v||!dc||dc.readyState!=='open')return;dc.send(JSON.stringify({t:'text',v}));addText(v,true);$('#txt').value=''};
-$('#txt').onkeydown=e=>{if(e.key==='Enter')$('#sendTxt').click()};
-async function sendFile(f){
-  const m={t:'file',name:f.name,size:f.size,type:f.type||'application/octet-stream'};
-  const ui=addFile(m,true);dc.send(JSON.stringify(m));
-  for(let o=0;o<f.size;o+=16384){
-    if(dc.bufferedAmount>1<<20)await new Promise(r=>{dc.onbufferedamountlow=()=>{dc.onbufferedamountlow=null;r()}});
-    dc.send(await f.slice(o,o+16384).arrayBuffer());ui.bar.style.width=Math.min(100,(o+16384)/f.size*100)+'%';
+  // ---------- room (Claude use) ----------
+  async function getRoom() {
+    const c = window.claude;
+    if (!c) throw new Error('Claude runtime not available. Please open this page through the Claude environment.');
+    const r = await c.use('room');
+    return r;
   }
-  dc.send(JSON.stringify({t:'end'}));ui.bw.remove();ui.s.textContent='Sent · '+fmt(f.size);
-}
-async function sendAll(fs){if(!(selfOk&&peerOk))return;for(const f of fs)await sendFile(f)}
-$('#file').onchange=e=>{sendAll([...e.target.files]);e.target.value=''};
-const dz=$('#drop');
-['dragenter','dragover'].forEach(v=>dz.addEventListener(v,e=>{e.preventDefault();dz.classList.add('over')}));
-['dragleave','drop'].forEach(v=>dz.addEventListener(v,e=>{e.preventDefault();dz.classList.remove('over')}));
-dz.addEventListener('drop',e=>sendAll([...e.dataTransfer.files]));
+
+  async function open(name) {
+    const root = await getRoom();
+    if (!root || !root.join) throw new Error('Pairing needs you to be signed in to your Claude account.');
+    room = await root.join('pair-' + name);
+    room.on('hello', onHello);
+    room.on('deny', onDeny);
+    room.on('sig', onSig);
+  }
+
+  async function closeRoom() {
+    try { if (room) await room.leave(); } catch (e) {}
+    room = null;
+  }
+
+  const send = (topic, data) => room && room.emit(topic, { ...data, from: me });
+
+  // ---------- Host ----------
+  $('#mk').onclick = async () => {
+    $('#hostIdle').classList.add('hidden');
+    $('#hostLive').classList.remove('hidden');
+    role = 'host';
+    say('#hostSt', 'Generating a unique code…');
+    try {
+      for (let i = 0; i < 6; i++) {
+        code = String(1000 + (crypto.getRandomValues(new Uint32Array(1))[0] % 9000));
+        await open(code);
+        await room.presence({ role: 'host' });
+        await new Promise(r => setTimeout(r, 1200));
+        const seen = await new Promise(res => {
+          let done = false;
+          const fin = v => { if (!done) { done = true; res(v); } };
+          setTimeout(() => fin(false), 1500);
+          const u = room.onPeers(c => {
+            fin((c.peers || []).some(p => !p.isMe && p.presence && p.presence.role === 'host'));
+            try { u && u(); } catch (e) {}
+          });
+        });
+        if (!seen) break;
+        await closeRoom();
+        code = null;
+      }
+      if (!code) throw new Error('Could not reserve a code. Try again.');
+      $('#codeBox').textContent = code;
+      setSync('waiting', false);
+      say('#hostSt', 'Waiting for the other device. Code expires in 5 minutes.');
+      expiry = setTimeout(() => {
+        if (!partner) { say('#hostSt', 'Code expired.', 1); cancelHost(); }
+      }, 300000);
+    } catch (e) { say('#hostSt', e.message || 'Could not start.', 1); }
+  };
+
+  function onHello(m) {
+    const d = m.data || {};
+    if (role !== 'host' || !d.from) return;
+    if (partner || pending) {
+      send('deny', { to: d.from, why: 'This code is already in use.' });
+      return;
+    }
+    pending = d.from;
+    $('#askT').textContent = '“' + String(d.dev || 'A device').slice(0, 40) + '” wants to connect. Only allow it if this is your own device.';
+    $('#ask').classList.remove('hidden');
+  }
+
+  $('#allow').onclick = () => {
+    if (!pending) return;
+    partner = pending;
+    pending = null;
+    $('#ask').classList.add('hidden');
+    clearTimeout(expiry);
+    say('#hostSt', 'Approved. Securing the link…');
+    startPeer(true);
+  };
+
+  $('#refuse').onclick = () => {
+    if (pending) send('deny', { to: pending, why: 'The other device refused the connection.' });
+    pending = null;
+    $('#ask').classList.add('hidden');
+  };
+
+  function cancelHost() {
+    closeRoom();
+    role = null;
+    code = null;
+    partner = null;
+    pending = null;
+    clearTimeout(expiry);
+    $('#hostLive').classList.add('hidden');
+    $('#hostIdle').classList.remove('hidden');
+    $('#ask').classList.add('hidden');
+    setSync('no session', false);
+  }
+  $('#cancel').onclick = cancelHost;
+
+  // ---------- Joiner ----------
+  const dg = [...document.querySelectorAll('#digits input')];
+  dg.forEach((el, i) => {
+    el.oninput = () => {
+      el.value = el.value.replace(/\D/g, '').slice(-1);
+      if (el.value && dg[i + 1]) dg[i + 1].focus();
+    };
+    el.onkeydown = e => {
+      if (e.key === 'Backspace' && !el.value && dg[i - 1]) dg[i - 1].focus();
+      if (e.key === 'Enter') $('#jn').click();
+    };
+    el.onpaste = e => {
+      const t = (e.clipboardData.getData('text') || '').replace(/\D/g, '').slice(0, 4);
+      if (t) { e.preventDefault(); dg.forEach((x, k) => x.value = t[k] || ''); }
+    };
+  });
+
+  $('#jn').onclick = async () => {
+    const c = dg.map(x => x.value).join('');
+    if (c.length !== 4) return say('#joinSt', 'Enter all 4 digits.', 1);
+    role = 'guest';
+    code = c;
+    say('#joinSt', 'Looking for the device…');
+    try {
+      await open(c);
+      await room.presence({ role: 'guest' });
+      let tries = 0;
+      const t = setInterval(() => {
+        if (partner || role !== 'guest') { clearInterval(t); return; }
+        if (++tries > 8) {
+          clearInterval(t);
+          say('#joinSt', 'No device found for that code.', 1);
+          closeRoom();
+          role = null;
+          return;
+        }
+        send('hello', { dev });
+      }, 1800);
+      setTimeout(() => send('hello', { dev }), 500);
+      say('#joinSt', 'Waiting for the other device to approve…');
+    } catch (e) { say('#joinSt', e.message || 'Could not connect.', 1); }
+  };
+
+  function onDeny(m) {
+    const d = m.data || {};
+    if (d.to !== me) return;
+    say('#joinSt', d.why || 'Refused.', 1);
+    closeRoom();
+    role = null;
+  }
+
+  // ---------- Signalling + peer ----------
+  function startPeer(initiator) {
+    pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
+    pc.onicecandidate = e => { if (e.candidate) send('sig', { to: partner, k: 'c', c: e.candidate }); };
+    pc.onconnectionstatechange = () => {
+      if (['failed', 'disconnected', 'closed'].includes(pc.connectionState)) lost();
+    };
+    if (initiator) {
+      setup(pc.createDataChannel('relay'));
+      pc.createOffer()
+        .then(o => pc.setLocalDescription(o))
+        .then(() => send('sig', {
+          to: partner,
+          k: 'o',
+          sdp: pc.localDescription.toJSON ? pc.localDescription.toJSON() : { type: pc.localDescription.type, sdp: pc.localDescription.sdp }
+        }));
+    } else {
+      pc.ondatachannel = e => setup(e.channel);
+    }
+  }
+
+  async function onSig(m) {
+    const d = m.data || {};
+    if (d.to !== me) return;
+    try {
+      if (role === 'guest' && d.k === 'o' && !partner) {
+        partner = d.from;
+        startPeer(false);
+        await pc.setRemoteDescription(d.sdp);
+        remoteSet = true;
+        fpR = fp(d.sdp.sdp);
+        await pc.setLocalDescription(await pc.createAnswer());
+        fpL = fp(pc.localDescription.sdp);
+        send('sig', { to: partner, k: 'a', sdp: { type: pc.localDescription.type, sdp: pc.localDescription.sdp } });
+        for (const c of queued) await pc.addIceCandidate(c);
+        queued = [];
+      } else if (d.from !== partner) return;
+      else if (d.k === 'a' && role === 'host') {
+        await pc.setRemoteDescription(d.sdp);
+        remoteSet = true;
+        fpR = fp(d.sdp.sdp);
+        fpL = fp(pc.localDescription.sdp);
+        for (const c of queued) await pc.addIceCandidate(c);
+        queued = [];
+      } else if (d.k === 'c') {
+        remoteSet ? await pc.addIceCandidate(d.c) : queued.push(d.c);
+      }
+    } catch (e) {}
+  }
+
+  const fp = s => ((s.match(/a=fingerprint:\S+ ([0-9A-Fa-f:]+)/) || [])[1] || '').toUpperCase();
+
+  async function secNumber() {
+    const a = [fpL, fpR].sort().join('|');
+    const h = new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(a)));
+    const n = ((h[0] << 16) | (h[1] << 8) | h[2]) % 1000000;
+    const s = String(n).padStart(6, '0');
+    return s.slice(0, 3) + ' ' + s.slice(3);
+  }
+
+  // ---------- Data channel ----------
+  function setup(ch) {
+    dc = ch;
+    ch.binaryType = 'arraybuffer';
+    ch.bufferedAmountLowThreshold = 1 << 20;
+
+    ch.onopen = async () => {
+      $('#pairView').classList.add('hidden');
+      $('#sessView').classList.remove('hidden');
+      setSync('connected', true);
+      $('#fp').textContent = await secNumber();
+      ch.send(JSON.stringify({ t: 'hi', dev }));
+      await closeRoom(); // code is dead
+    };
+
+    ch.onclose = lost;
+
+    ch.onmessage = e => {
+      if (typeof e.data === 'string') {
+        const m = JSON.parse(e.data);
+        if (m.t === 'hi') $('#peerName').textContent = 'Connected to ' + String(m.dev || 'device').slice(0, 40);
+        else if (m.t === 'ok') peerOk = true, gate();
+        else if (!selfOk) return;
+        else if (m.t === 'text') addText(m.v, false);
+        else if (m.t === 'file') inc = { m, parts: [], got: 0, ui: addFile(m, false) };
+        else if (m.t === 'end' && inc) { finish(inc.ui, inc.m, new Blob(inc.parts, { type: inc.m.type })); inc = null; }
+      } else if (inc && selfOk) {
+        inc.parts.push(e.data);
+        inc.got += e.data.byteLength;
+        inc.ui.bar.style.width = (inc.got / inc.m.size * 100) + '%';
+      }
+    };
+  }
+
+  function gate() {
+    const ready = selfOk && peerOk;
+    $('#tools').classList.toggle('lock', !ready);
+    if (ready) $('#verify').classList.add('hidden');
+    else if (selfOk) $('#verify p').textContent = 'Waiting for the other device to confirm the same number…';
+  }
+
+  $('#match').onclick = () => {
+    selfOk = true;
+    dc.send(JSON.stringify({ t: 'ok' }));
+    $('#match').disabled = true;
+    $('#nomatch').classList.add('hidden');
+    gate();
+  };
+
+  $('#nomatch').onclick = () => end();
+
+  function lost() {
+    if ($('#sessView').classList.contains('hidden')) return;
+    setSync('disconnected', false);
+    $('#peerName').textContent = 'Disconnected';
+  }
+
+  function end() {
+    try { dc && dc.close(); } catch (e) {}
+    try { pc && pc.close(); } catch (e) {}
+    closeRoom();
+    location.reload();
+  }
+
+  $('#end').onclick = end;
+
+  window.addEventListener('beforeunload', e => {
+    if (!$('#sessView').classList.contains('hidden')) {
+      e.preventDefault();
+      e.returnValue = '';
+    }
+  });
+
+  // ---------- Feed ----------
+  function row(icon, title, sub) {
+    $('#empty') && $('#empty').remove();
+    const d = document.createElement('div');
+    d.className = 'item fade-in';
+    const ty = document.createElement('div');
+    ty.className = 'ty';
+    ty.textContent = icon;
+    const nm = document.createElement('div');
+    nm.className = 'nm';
+    const n = document.createElement('div');
+    n.className = 'n';
+    typeof title === 'string' ? n.textContent = title : n.append(title);
+    const s = document.createElement('div');
+    s.className = 'd';
+    s.textContent = sub;
+    const bw = document.createElement('div');
+    bw.className = 'bar';
+    const bar = document.createElement('i');
+    bw.append(bar);
+    nm.append(n, s, bw);
+    d.append(ty, nm);
+    $('#feed').prepend(d);
+    return { d, ty, bw, bar, s, n };
+  }
+
+  function addText(v, mine) {
+    let t = v;
+    if (/^https?:\/\/\S+$/i.test(v.trim())) {
+      t = document.createElement('a');
+      t.href = v.trim();
+      t.target = '_blank';
+      t.rel = 'noopener noreferrer';
+      t.textContent = v.trim();
+    }
+    const r = row(/^https?:/i.test(v) ? 'URL' : 'TXT', t, mine ? 'Sent' : 'Received');
+    r.bw.remove();
+    if (!mine) {
+      const b = document.createElement('button');
+      b.className = 'b q sm';
+      b.textContent = 'Copy';
+      b.onclick = () => navigator.clipboard.writeText(v);
+      r.d.append(b);
+    }
+  }
+
+  const ext = n => (n.split('.').pop() || 'file').slice(0, 4).toUpperCase();
+
+  function addFile(m, mine) {
+    return row(ext(m.name), m.name, (mine ? 'Sending · ' : 'Receiving · ') + fmt(m.size));
+  }
+
+  async function finish(ui, m, blob) {
+    ui.bw.remove();
+    ui.s.textContent = 'Received · ' + fmt(m.size);
+    if (/^image\//.test(m.type) && m.size < 8e6) {
+      const fr = new FileReader();
+      fr.onload = () => {
+        const im = new Image();
+        im.src = fr.result;
+        ui.ty.textContent = '';
+        ui.ty.append(im);
+      };
+      fr.readAsDataURL(blob);
+    }
+    const b = document.createElement('button');
+    b.className = 'b sm';
+    b.textContent = 'Save';
+    b.onclick = async () => {
+      try {
+        dls = dls || await window.claude.use('downloads');
+        if (!dls) throw 0;
+        await dls.save({ filename: m.name, data: blob });
+      } catch (e) {
+        if (!e || e.code !== 'declined') {
+          const u = URL.createObjectURL(blob);
+          window.open(u, '_blank');
+        }
+      }
+    };
+    ui.d.append(b);
+  }
+
+  $('#sendTxt').onclick = () => {
+    const v = $('#txt').value.trim();
+    if (!v || !dc || dc.readyState !== 'open') return;
+    dc.send(JSON.stringify({ t: 'text', v }));
+    addText(v, true);
+    $('#txt').value = '';
+  };
+
+  $('#txt').onkeydown = e => { if (e.key === 'Enter') $('#sendTxt').click(); };
+
+  async function sendFile(f) {
+    const m = { t: 'file', name: f.name, size: f.size, type: f.type || 'application/octet-stream' };
+    const ui = addFile(m, true);
+    dc.send(JSON.stringify(m));
+    for (let o = 0; o < f.size; o += 16384) {
+      if (dc.bufferedAmount > 1 << 20) {
+        await new Promise(r => {
+          dc.onbufferedamountlow = () => { dc.onbufferedamountlow = null; r(); };
+        });
+      }
+      dc.send(await f.slice(o, o + 16384).arrayBuffer());
+      ui.bar.style.width = Math.min(100, (o + 16384) / f.size * 100) + '%';
+    }
+    dc.send(JSON.stringify({ t: 'end' }));
+    ui.bw.remove();
+    ui.s.textContent = 'Sent · ' + fmt(f.size);
+  }
+
+  async function sendAll(fs) {
+    if (!(selfOk && peerOk)) return;
+    for (const f of fs) await sendFile(f);
+  }
+
+  $('#file').onchange = e => { sendAll([...e.target.files]); e.target.value = ''; };
+
+  const dz = $('#drop');
+  ['dragenter', 'dragover'].forEach(v => dz.addEventListener(v, e => {
+    e.preventDefault();
+    dz.classList.add('over');
+  }));
+  ['dragleave', 'drop'].forEach(v => dz.addEventListener(v, e => {
+    e.preventDefault();
+    dz.classList.remove('over');
+  }));
+  dz.addEventListener('drop', e => sendAll([...e.dataTransfer.files]));
+
+})();
 </script>
 </body>
 </html>
