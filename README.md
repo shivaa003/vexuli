@@ -1,25 +1,41 @@
 # Vexuli
 
-Private, focused file and link transfer UI for a two-device room.
+Vexuli is a real-time, one-to-one file and link transfer app. The sender creates a short-lived room, the receiver joins with the server-issued four-digit code, and both devices can then send files or links to each other.
 
 ## Run locally
 
-```bash
-python -m http.server 8765
-```
-
-Open <http://localhost:8765>.
-
-## Deploy the interface
-
-This is a zero-build static page. It can be deployed to GitHub Pages, Vercel, Netlify, or any static host. For Vercel:
+Requires Node.js 18 or newer.
 
 ```bash
-npx vercel --prod
+npm install
+npm start
 ```
 
-## Important transport note
+Open <http://localhost:3000> in two browser windows or on two devices connected to the same reachable server.
 
-The page is a complete front-end prototype and demonstrates the room, pairing, file selection, link selection, and transfer states locally in one browser. Actual cross-device transfer requires a WebRTC data channel plus a small signaling service to exchange offers, answers, and ICE candidates. A four-digit room code alone is not a cryptographic identity, so a production service should also use short-lived room tokens, rate limiting, room expiry, and server-side validation. WebRTC data channels provide encrypted transport after the peers connect.
+## How it works
 
-Keep the signaling service separate from file storage: it should forward connection metadata only and never persist file bytes.
+- The room code is created by the server, so it works across devices instead of being generated independently in each browser.
+- The server keeps only room membership and signaling data in memory.
+- WebRTC negotiates a peer-to-peer data channel between the two devices.
+- Files are chunked and sent directly over the encrypted data channel; file bytes are not uploaded to Vexuli.
+- A room expires after 30 minutes and closes as soon as the host leaves.
+- Only one receiver can join each room.
+
+## Deploy on Render, Railway, Fly.io, or any Node host
+
+Use these settings:
+
+```text
+Build command: npm install
+Start command: npm start
+Health check: /health
+```
+
+The app must be served over HTTPS in production so browsers allow WebRTC and secure WebSockets. Set the public app URL as the deployment URL and open that same URL on both devices.
+
+Do not deploy this version to GitHub Pages or a static-only host: the room API and WebSocket signaling server need a persistent Node process. The signaling service forwards connection metadata only; it does not store file bytes.
+
+## Security boundary
+
+WebRTC data channels are encrypted in transit by the browser. The four-digit code is a room locator and pairing secret, not a standalone cryptographic identity; production deployments should add HTTPS, rate limiting, monitoring, and a stronger optional room secret if the threat model requires protection against code guessing.
