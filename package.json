@@ -1,0 +1,40 @@
+{
+  "name": "vexuli",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npm run build && cross-env PORT=5173 node server/index.mjs",
+    "build": "vite build",
+    "preview": "PORT=4173 node server/index.mjs",
+    "start": "node server/index.mjs",
+    "dev:server": "node --watch server/index.mjs",
+    "dev:all": "concurrently -k \"npm:dev:server\" \"npm:dev:vite\"",
+    "test": "node --test server/*.test.mjs",
+    "typecheck": "tsc --noEmit",
+    "test:e2e": "npm run build && node --test e2e/*.test.mjs",
+    "dev:vite": "vite --host 0.0.0.0"
+  },
+  "dependencies": {
+    "clsx": "2.1.1",
+    "lucide-react": "^1.70.0",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "tailwind-merge": "3.4.0",
+    "ws": "^8.22.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "4.1.17",
+    "@types/node": "22.19.17",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "5.1.1",
+    "concurrently": "^9.2.5",
+    "cross-env": "^10.1.0",
+    "playwright": "^1.65.0",
+    "tailwindcss": "4.1.17",
+    "typescript": "5.9.3",
+    "vite": "7.3.2",
+    "vite-plugin-singlefile": "2.3.0"
+  }
+}
