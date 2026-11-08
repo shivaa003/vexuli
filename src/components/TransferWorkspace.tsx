@@ -505,11 +505,7 @@ export default function TransferWorkspace({ engine, state, mode, onModeChange }:
             </div>
           )}
 
-          {state.relayConfigured === false && !inRoom && (
-            <p className="rounded-xl border border-flare-400/18 bg-flare-400/[0.055] px-3.5 py-2.5 text-[11.5px] leading-relaxed text-flare-300">
-              Connection note: this deployment has no TURN relay. Direct transfers work on many networks, but restrictive networks may not connect. Configure TURN before relying on it across networks.
-            </p>
-          )}
+          
 
           {state.phase === "waiting" && state.code && (
             <div className="animate-[pop-in_0.45s_cubic-bezier(0.16,1,0.3,1)_both] py-3 text-center">
