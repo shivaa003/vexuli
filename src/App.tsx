@@ -260,13 +260,7 @@ function Header({
               {link.label}
             </a>
           ))}
-          <button
-            type="button"
-            onClick={onOpenDeploy}
-            className="flex items-center gap-1.5 text-[13px] font-semibold text-signal-600 transition-colors hover:text-signal-700 dark:text-signal-300 dark:hover:text-signal-200"
-          >
-            <Download className="h-3.5 w-3.5" /> Self-Host Free
-          </button>
+          
         </div>
 
         <div className="flex items-center gap-3">
