@@ -1,0 +1,412 @@
+{
+  "totalRoomsCreated": 6,
+  "totalRoomsPaired": 4,
+  "totalSignalsRelayed": 12,
+  "totalBytesTransferred": 4292988,
+  "totalTransfersCompleted": 10,
+  "contentStats": {
+    "files": 6,
+    "text": 4
+  },
+  "deviceStats": {
+    "desktop": 8,
+    "mobile": 2,
+    "tablet": 0,
+    "other": 0
+  },
+  "hourlyHistory": [
+    {
+      "label": "13:00",
+      "timestamp": 1794315600000,
+      "transfers": 364,
+      "bytes": 14694744064,
+      "signals": 1092,
+      "roomsCreated": 455,
+      "roomsPaired": 364
+    },
+    {
+      "label": "14:00",
+      "timestamp": 1794319200000,
+      "transfers": 345,
+      "bytes": 13927710720,
+      "signals": 1035,
+      "roomsCreated": 431,
+      "roomsPaired": 345
+    },
+    {
+      "label": "15:00",
+      "timestamp": 1794322800000,
+      "transfers": 320,
+      "bytes": 12918456320,
+      "signals": 960,
+      "roomsCreated": 400,
+      "roomsPaired": 320
+    },
+    {
+      "label": "16:00",
+      "timestamp": 1794326400000,
+      "transfers": 290,
+      "bytes": 11707351040,
+      "signals": 870,
+      "roomsCreated": 363,
+      "roomsPaired": 290
+    },
+    {
+      "label": "17:00",
+      "timestamp": 1794330000000,
+      "transfers": 259,
+      "bytes": 10455875584,
+      "signals": 777,
+      "roomsCreated": 324,
+      "roomsPaired": 259
+    },
+    {
+      "label": "18:00",
+      "timestamp": 1794333600000,
+      "transfers": 228,
+      "bytes": 9204400128,
+      "signals": 684,
+      "roomsCreated": 285,
+      "roomsPaired": 228
+    },
+    {
+      "label": "19:00",
+      "timestamp": 1794337200000,
+      "transfers": 199,
+      "bytes": 8033665024,
+      "signals": 597,
+      "roomsCreated": 249,
+      "roomsPaired": 199
+    },
+    {
+      "label": "20:00",
+      "timestamp": 1794340800000,
+      "transfers": 173,
+      "bytes": 6984040448,
+      "signals": 519,
+      "roomsCreated": 216,
+      "roomsPaired": 173
+    },
+    {
+      "label": "21:00",
+      "timestamp": 1794344400000,
+      "transfers": 154,
+      "bytes": 6217007104,
+      "signals": 462,
+      "roomsCreated": 193,
+      "roomsPaired": 154
+    },
+    {
+      "label": "22:00",
+      "timestamp": 1794348000000,
+      "transfers": 142,
+      "bytes": 5732564992,
+      "signals": 426,
+      "roomsCreated": 178,
+      "roomsPaired": 142
+    },
+    {
+      "label": "23:00",
+      "timestamp": 1794351600000,
+      "transfers": 138,
+      "bytes": 5571084288,
+      "signals": 414,
+      "roomsCreated": 173,
+      "roomsPaired": 138
+    },
+    {
+      "label": "00:00",
+      "timestamp": 1794355200000,
+      "transfers": 142,
+      "bytes": 5732564992,
+      "signals": 426,
+      "roomsCreated": 178,
+      "roomsPaired": 142
+    },
+    {
+      "label": "01:00",
+      "timestamp": 1794358800000,
+      "transfers": 154,
+      "bytes": 6217007104,
+      "signals": 462,
+      "roomsCreated": 193,
+      "roomsPaired": 154
+    },
+    {
+      "label": "02:00",
+      "timestamp": 1794362400000,
+      "transfers": 173,
+      "bytes": 6984040448,
+      "signals": 519,
+      "roomsCreated": 216,
+      "roomsPaired": 173
+    },
+    {
+      "label": "03:00",
+      "timestamp": 1794366000000,
+      "transfers": 199,
+      "bytes": 8033665024,
+      "signals": 597,
+      "roomsCreated": 249,
+      "roomsPaired": 199
+    },
+    {
+      "label": "04:00",
+      "timestamp": 1794369600000,
+      "transfers": 228,
+      "bytes": 9204400128,
+      "signals": 684,
+      "roomsCreated": 285,
+      "roomsPaired": 228
+    },
+    {
+      "label": "05:00",
+      "timestamp": 1794373200000,
+      "transfers": 259,
+      "bytes": 10455875584,
+      "signals": 777,
+      "roomsCreated": 324,
+      "roomsPaired": 259
+    },
+    {
+      "label": "06:00",
+      "timestamp": 1794376800000,
+      "transfers": 290,
+      "bytes": 11707351040,
+      "signals": 870,
+      "roomsCreated": 363,
+      "roomsPaired": 290
+    },
+    {
+      "label": "07:00",
+      "timestamp": 1794380400000,
+      "transfers": 320,
+      "bytes": 12918456320,
+      "signals": 960,
+      "roomsCreated": 400,
+      "roomsPaired": 320
+    },
+    {
+      "label": "08:00",
+      "timestamp": 1794384000000,
+      "transfers": 345,
+      "bytes": 13927710720,
+      "signals": 1035,
+      "roomsCreated": 431,
+      "roomsPaired": 345
+    },
+    {
+      "label": "09:00",
+      "timestamp": 1794387600000,
+      "transfers": 364,
+      "bytes": 14694744064,
+      "signals": 1092,
+      "roomsCreated": 455,
+      "roomsPaired": 364
+    },
+    {
+      "label": "10:00",
+      "timestamp": 1794391200000,
+      "transfers": 376,
+      "bytes": 15179186176,
+      "signals": 1128,
+      "roomsCreated": 470,
+      "roomsPaired": 376
+    },
+    {
+      "label": "11:00",
+      "timestamp": 1794394800000,
+      "transfers": 380,
+      "bytes": 15340666880,
+      "signals": 1140,
+      "roomsCreated": 475,
+      "roomsPaired": 380
+    },
+    {
+      "label": "12:00",
+      "timestamp": 1794398400000,
+      "transfers": 386,
+      "bytes": 15183479164,
+      "signals": 1140,
+      "roomsCreated": 476,
+      "roomsPaired": 380
+    }
+  ],
+  "recentEvents": [
+    {
+      "id": "ae8e8817-f4ec-40f2-9321-128743e1b7de",
+      "title": "Session Room Concluded",
+      "detail": "Ephemeral room destroyed from volatile memory",
+      "route": "P2P",
+      "timestamp": 1794399624182
+    },
+    {
+      "id": "c4054339-31e3-4e05-ad6d-c88c2ea9549b",
+      "title": "Session Room Concluded",
+      "detail": "Ephemeral room destroyed from volatile memory",
+      "route": "P2P",
+      "timestamp": 1794399624165
+    },
+    {
+      "id": "04b14bb2-c698-4467-a8bd-5f3d59f41260",
+      "title": "WebRTC SDP Exchanged",
+      "detail": "OFFER cryptographic handshake relayed",
+      "route": "Encrypted WebRTC",
+      "timestamp": 1794399624162
+    },
+    {
+      "id": "d24d0378-7195-42b1-80ec-a8aba0e0d16e",
+      "title": "P2P WebRTC Channel Approved",
+      "detail": "Mutual cryptographic channel established",
+      "route": "Direct P2P",
+      "timestamp": 1794399624161
+    },
+    {
+      "id": "3eec0b84-07f1-426e-957b-1aed548bcbea",
+      "title": "Peer Join Requested",
+      "detail": "Verification phrase presented for approval",
+      "route": "Signaling",
+      "timestamp": 1794399624160
+    },
+    {
+      "id": "38421eea-180f-4c97-9d5c-d687a6aa3c3f",
+      "title": "New Session Room Initialized",
+      "detail": "Ephemeral room awaiting peer join request",
+      "route": "Signaling",
+      "timestamp": 1794399624157
+    },
+    {
+      "id": "a63c2ff3-a8a6-4b3f-b3b9-5326e627d0ff",
+      "title": "New Session Room Initialized",
+      "detail": "Ephemeral room awaiting peer join request",
+      "route": "Signaling",
+      "timestamp": 1794399624155
+    },
+    {
+      "id": "f17998de-3116-41f3-8b20-3bf8c3ca173c",
+      "title": "Session Room Concluded",
+      "detail": "Ephemeral room destroyed from volatile memory",
+      "route": "P2P",
+      "timestamp": 1794399570287
+    },
+    {
+      "id": "282fa984-e143-4dd5-bf7a-5d13bcb09b36",
+      "title": "Direct File Transfer Completed",
+      "detail": "48 KB transferred peer-to-peer",
+      "route": "Direct P2P",
+      "timestamp": 1794399569388
+    },
+    {
+      "id": "80e5b066-9221-47d1-a925-40f10fe410bc",
+      "title": "Direct File Transfer Completed",
+      "detail": "2.0 MB transferred peer-to-peer",
+      "route": "Direct P2P",
+      "timestamp": 1794399568770
+    },
+    {
+      "id": "57075144-885f-4cfe-ab9c-bd07904cb1bf",
+      "title": "Direct File Transfer Completed",
+      "detail": "52 B transferred peer-to-peer",
+      "route": "Direct P2P",
+      "timestamp": 1794399567099
+    },
+    {
+      "id": "1fe1e6d5-863e-4aad-89cf-0d3003fa4727",
+      "title": "Encrypted Text Payload",
+      "detail": "29 B transferred peer-to-peer",
+      "route": "Direct P2P",
+      "timestamp": 1794399566326
+    },
+    {
+      "id": "0d0be560-ee22-4d1c-bd07-928d87e20171",
+      "title": "Encrypted Text Payload",
+      "detail": "47 B transferred peer-to-peer",
+      "route": "Direct P2P",
+      "timestamp": 1794399566150
+    },
+    {
+      "id": "d9fd1e2f-8645-4d9c-92e7-1f1dbc827348",
+      "title": "WebRTC SDP Exchanged",
+      "detail": "ANSWER cryptographic handshake relayed",
+      "route": "Encrypted WebRTC",
+      "timestamp": 1794399563890
+    },
+    {
+      "id": "5640fe10-4116-4c96-8084-352be5153ef6",
+      "title": "WebRTC SDP Exchanged",
+      "detail": "OFFER cryptographic handshake relayed",
+      "route": "Encrypted WebRTC",
+      "timestamp": 1794399563850
+    },
+    {
+      "id": "4faac514-fd1f-4829-b691-342461775d99",
+      "title": "P2P WebRTC Channel Approved",
+      "detail": "Mutual cryptographic channel established",
+      "route": "Direct P2P",
+      "timestamp": 1794399563752
+    },
+    {
+      "id": "e96816ad-12ba-4a61-b3a4-f7abfc95337d",
+      "title": "Peer Join Requested",
+      "detail": "Verification phrase presented for approval",
+      "route": "Signaling",
+      "timestamp": 1794399562209
+    },
+    {
+      "id": "e0ef6195-1b52-432b-9c05-60c45cd4bb3c",
+      "title": "New Session Room Initialized",
+      "detail": "Ephemeral room awaiting peer join request",
+      "route": "Signaling",
+      "timestamp": 1794399561584
+    },
+    {
+      "id": "91647e09-16fa-4600-84b6-58a01514cc22",
+      "title": "Session Room Concluded",
+      "detail": "Ephemeral room destroyed from volatile memory",
+      "route": "P2P",
+      "timestamp": 1794399547023
+    },
+    {
+      "id": "a6f62df6-e6cd-4692-b7e1-130b6a3ef1bd",
+      "title": "Direct File Transfer Completed",
+      "detail": "48 KB transferred peer-to-peer",
+      "route": "Direct P2P",
+      "timestamp": 1794399546066
+    },
+    {
+      "id": "3ad41acd-5a75-49c7-8303-48ead1946f75",
+      "title": "Direct File Transfer Completed",
+      "detail": "2.0 MB transferred peer-to-peer",
+      "route": "Direct P2P",
+      "timestamp": 1794399545423
+    },
+    {
+      "id": "39eac559-b6a6-46e5-adb8-3f5141e14ed8",
+      "title": "Direct File Transfer Completed",
+      "detail": "52 B transferred peer-to-peer",
+      "route": "Direct P2P",
+      "timestamp": 1794399543692
+    },
+    {
+      "id": "04bae83c-88e4-4678-b2bf-269c30d8e145",
+      "title": "Encrypted Text Payload",
+      "detail": "29 B transferred peer-to-peer",
+      "route": "Direct P2P",
+      "timestamp": 1794399542900
+    },
+    {
+      "id": "8303b7ea-c02c-43d8-ad31-6c7498e88f58",
+      "title": "Encrypted Text Payload",
+      "detail": "47 B transferred peer-to-peer",
+      "route": "Direct P2P",
+      "timestamp": 1794399542686
+    },
+    {
+      "id": "92926b04-dc42-40a9-a231-5e7d9222845d",
+      "title": "WebRTC SDP Exchanged",
+      "detail": "ANSWER cryptographic handshake relayed",
+      "route": "Encrypted WebRTC",
+      "timestamp": 1794399540610
+    }
+  ]
+}
